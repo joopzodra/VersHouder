@@ -1,0 +1,13 @@
+.login-background {
+  position: absolute;
+  top:  0;
+  height: 100vh;
+  width: 100vw;
+  z-index: -99999;
+}
+
+.login-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding-bottom: 16px;
+}

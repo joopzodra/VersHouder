@@ -1,0 +1,31 @@
+<div class="signup-background w3-theme-l1">
+</div>
+<div class="signup-container w3-container w3-white">
+  <h2 class="w3-center">
+    Meld je aan
+  </h2>
+  <div *ngIf="duplicateUsername && signupForm.pristine" id="duplicate-username" class="w3-panel w3-yellow">
+    <h3>Andere gebruikersnaam kiezen</h3>
+    <p>De gebruikersnaam is niet meer beschikbaar. Kies een andere.</p>
+  </div>
+  <div *ngIf="remoteError" id="remote-error" class="w3-panel w3-text-red">
+    <h3>Sorry</h3>
+    <p>Er is een probleem met de database. Probeer het later opnieuw.</p>
+  </div>
+  <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+    <div>
+      <input class="w3-input w3-border w3-section" type="text" name="username" placeholder="gebruikersnaam" ngModel minlength="4" maxlength="20" pattern="[A-Za-z0-9]+">
+      <jr-show-error text="Gebruikersnaam" path="username"></jr-show-error>
+    </div>
+    <div>
+      <input class="w3-input w3-border w3-section" type="text" name="password" placeholder="wachtwoord" ngModel ngModel minlength="4" maxlength="20" pattern="[^ ]+">
+      <jr-show-error text="Wachtwoord" path="password"></jr-show-error>
+    </div>
+    <button class="w3-button w3-blue w3-block" type="submit">Aanmelden</button>
+  </form>
+</div>
+<div>
+  <p class="w3-center">
+    <a routerLink="/auth/login">Terug naar login</a>
+  </p>
+</div>

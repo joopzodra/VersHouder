@@ -1,0 +1,33 @@
+<div class="login-background w3-teal">
+</div>
+
+<div class="login-container w3-container w3-white">
+  <h2 class="w3-center">
+    Log in
+  </h2>
+  <div *ngIf="userDenied && loginForm.pristine" id="user-denied" class="w3-panel w3-yellow">
+    <h3>Opnieuw!</h3>
+    <p>Je gebruikersnaam en/of wachtwoord zijn onjuist</p>
+  </div>
+  <div *ngIf="remoteError" id="remote-error" class="w3-panel w3-text-red">
+    <h3>Sorry</h3>
+    <p>Er is een probleem met de database. Probeer het later opnieuw.</p>
+  </div>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <div>
+      <input type="text" class="w3-input w3-border w3-section" name="username" placeholder="gebruikersnaam" ngModel required>
+      <jr-show-error text="Gebruikersnaam" path="username"></jr-show-error>
+    </div>
+    <div>
+      <input type="password" class="w3-input w3-border w3-section" name="password" placeholder="wachtwoord" ngModel required>
+      <jr-show-error text="Wachtwoord" path="password"></jr-show-error>
+    </div>
+    <button class="w3-button w3-blue w3-block" type="submit">Log in</button>
+  </form>
+</div>
+<div>
+  <p class="w3-center w3-text-white">Heb je nog geen account?
+    <a routerLink="/auth/signup">Meld je aan</a>
+  </p>
+</div>
+

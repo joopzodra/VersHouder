@@ -1,0 +1,19 @@
+svg {
+  fill:  white;
+  display: block;
+}
+
+.all-container {
+  display:  -webkit-flex;
+  display: flex;
+}
+
+.svg-container {
+  -webkit-align-self:  center;
+  align-self: center;
+  margin-right: 7px;
+}
+
+.arrow-down {
+  font-size: 7px;
+}

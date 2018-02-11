@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'jr-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: `
+    <jr-header></jr-header>
+    <router-outlet></router-outlet>
+    `
 })
 export class AppComponent {
-  title = 'jr';
 }

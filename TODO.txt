@@ -1,0 +1,3 @@
+In express.js app op server: session secret key in environment variable.
+
+Cookie expiration voor session instellen op bv 1 uur.

@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "poetry-db"
+    "name": "VersHouder"
   },
   "apps": [
     {
@@ -19,7 +19,9 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "jr",
       "styles": [
-        "styles.scss"
+        "styles/w3.css",
+        "styles/w3-theme-teal.css",
+        "styles/styles.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
