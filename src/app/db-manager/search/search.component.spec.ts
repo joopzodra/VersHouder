@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
-import { FormsModule, FormGroup } from '@angular/forms'
+import { ReactiveFormsModule, FormGroup } from '@angular/forms'
 import { DbManagerService } from '../services/db-manager.service';
 import { MockDbManagerService } from '../../testing/mock-db-manager-service'
 
@@ -14,7 +14,7 @@ describe('SearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule],
+      imports: [ReactiveFormsModule],
       declarations: [ SearchComponent ],
       providers: [{ provide: DbManagerService, useClass: MockDbManagerService },]
     })
