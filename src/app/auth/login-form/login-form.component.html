@@ -13,13 +13,13 @@
     <h3>Sorry</h3>
     <p>Er is een probleem met de database. Probeer het later opnieuw.</p>
   </div>
-  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+  <form (ngSubmit)="onSubmit(loginForm.value)" [formGroup]="loginForm">
     <div>
-      <input type="text" class="w3-input w3-border w3-section" name="username" placeholder="gebruikersnaam" ngModel required>
+      <input type="text" class="w3-input w3-border w3-section" placeholder="gebruikersnaam" formControlName="username">
       <jr-show-error text="Gebruikersnaam" path="username"></jr-show-error>
     </div>
     <div>
-      <input type="password" class="w3-input w3-border w3-section" name="password" placeholder="wachtwoord" ngModel required>
+      <input type="password" class="w3-input w3-border w3-section" placeholder="wachtwoord" formControlName="password">
       <jr-show-error text="Wachtwoord" path="password"></jr-show-error>
     </div>
     <button class="w3-button w3-blue w3-block" type="submit">Log in</button>

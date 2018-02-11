@@ -1,5 +1,5 @@
 import { Component, Input, Optional } from '@angular/core';
-import { NgForm, FormGroup, FormGroupDirective } from '@angular/forms';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'jr-show-error',
@@ -15,11 +15,11 @@ export class ShowErrorComponent {
   @Input('path') controlPath: string;
   @Input('text') displayName = '';
 
-  constructor(private ngForm: NgForm) { }
+  constructor(private formGroup: FormGroupDirective) { }
 
   get errorMessages(): string[] {
     const messages = [];
-    const form: FormGroup = this.ngForm.form;
+    const form: FormGroup = this.formGroup.form;
     const control = form.get(this.controlPath);
     if (!control || !(control.touched) || !control.errors) {
       return undefined;

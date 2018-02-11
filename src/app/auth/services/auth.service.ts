@@ -50,7 +50,7 @@ export class AuthService {
           this._username.next(res.username);
         }
       },
-      err => console.log(err)); // TO DO error handling 
+        err => console.log(err)); // TO DO error handling 
   }
 
   public login(user: User) {
@@ -63,15 +63,8 @@ export class AuthService {
             document.cookie = 'auth=yes; path=/; max-age=1800';
             this._username.next(user.username);
             this.router.navigate([this.redirectUrl]);
-          } else {
-            return 'unauth-user';
           }
-        },
-          catchError((error: any) => {
-            console.log(error);
-            return of('remote-error');
-          })
-        )
+        })
       );
   }
 
@@ -95,17 +88,7 @@ export class AuthService {
       headers: this.headers
     })
       .pipe(
-        map(
-          () => this.router.navigate(['/']),
-          catchError((error: any) => {
-            if (error.error === 'username-already-exists') {
-              return of('username-already-exists');
-            } else {
-              console.log(error);
-              return of('remote-error');
-            }
-          })
-        )
+        map(() => this.router.navigate(['/']))
       );
   }
 

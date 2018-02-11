@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Title } from '@angular/platform-browser';
@@ -16,7 +16,7 @@ import { UserBadgeAndLogoutComponent } from './user-badge-and-logout/user-badge-
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     AuthRoutingModule
   ],
