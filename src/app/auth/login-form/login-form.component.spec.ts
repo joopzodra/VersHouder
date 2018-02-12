@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, FormGroup } from '@angular/forms'
+import { ReactiveFormsModule, FormGroup } from '@angular/forms'
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 
@@ -13,17 +13,9 @@ describe('LoginFormComponent', () => {
   let el: HTMLElement;
   let authService: AuthService;
 
-  function formUsername(username: string) {
-    const form = component.loginForm.form;
-    const usernameControl = form.get('username');
-    usernameControl.setValue(username);
-    const passwordControl = form.get('password');
-    passwordControl.setValue('secret');
-  }
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule],
+      imports: [ReactiveFormsModule],
       declarations: [LoginFormComponent],
       providers: [
         { provide: AuthService, useClass: MockAuthService },
@@ -48,33 +40,30 @@ describe('LoginFormComponent', () => {
 
   it('submits username and password', async(() => {
     const spy = spyOn(authService, 'login').and.callThrough();
-    fixture.whenStable().then(() => {
-      formUsername('good-user');
-      component.onSubmit();
-      expect(spy).toHaveBeenCalledWith({ username: 'good-user', password: 'secret' });
-    });
+    const testUser = { username: 'good-user', password: 'secret' }
+    component.loginForm.setValue(testUser);
+    component.onSubmit(testUser);
+    expect(spy).toHaveBeenCalledWith({ username: 'good-user', password: 'secret' });
   }));
 
   it('handles user denied response', async(() => {
-    fixture.whenStable().then(() => {
-      expect(component.userDenied).toBeFalsy();
-      formUsername('bad-user');
-      component.onSubmit();
-      expect(component.userDenied).toBeTruthy();
-      fixture.detectChanges();
-      expect(el.querySelector('#user-denied')).toBeTruthy();
-    });
+    expect(component.userDenied).toBeFalsy();
+    const testUser = { username: 'bad-user', password: 'secret' };
+    component.loginForm.setValue(testUser);
+    component.onSubmit(testUser);
+    expect(component.userDenied).toBeTruthy();
+    fixture.detectChanges();
+    expect(el.querySelector('#user-denied')).toBeTruthy();
   }));
 
   it('handles error response', async(() => {
-    fixture.whenStable().then(() => {
-      expect(component.remoteError).toBeFalsy();
-      formUsername('give-me-error');
-      component.onSubmit();
-      expect(component.remoteError).toBeTruthy();
-      fixture.detectChanges();
-      expect(el.querySelector('#remote-error')).toBeTruthy();
-    });
+    expect(component.remoteError).toBeFalsy();
+    const testUser = { username: 'give-me-error', password: 'secret' }
+    component.loginForm.setValue(testUser);
+    component.onSubmit(testUser);
+    expect(component.remoteError).toBeTruthy();
+    fixture.detectChanges();
+    expect(el.querySelector('#remote-error')).toBeTruthy();
   }));
 
 });

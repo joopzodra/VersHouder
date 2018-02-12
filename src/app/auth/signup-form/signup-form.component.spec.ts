@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router'
@@ -15,17 +15,9 @@ describe('SignupFormComponent', () => {
   let el: HTMLElement;
   let authService: AuthService;
 
-  function formUsername(username: string) {
-    const form = component.signupForm.form;
-    const usernameControl = form.get('username');
-    usernameControl.setValue(username);
-    const passwordControl = form.get('password');
-    passwordControl.setValue('secret');
-  }
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule],
+      imports: [ReactiveFormsModule],
       declarations: [SignupFormComponent],
       providers: [
         { provide: AuthService, useClass: MockAuthService },
@@ -51,33 +43,30 @@ describe('SignupFormComponent', () => {
 
   it('submits username and password', async(() => {
     const spy = spyOn(authService, 'signup').and.callThrough();
-    fixture.whenStable().then(() => {
-      formUsername('good-user');
-      component.onSubmit();
-      expect(spy).toHaveBeenCalledWith({ username: 'good-user', password: 'secret' });
-    });
+    const testUser = { username: 'goodUser', password: 'secret' }
+    component.signupForm.setValue(testUser); console.log(component.signupForm)
+    component.onSubmit(testUser);
+    expect(spy).toHaveBeenCalledWith({ username: 'goodUser', password: 'secret' });
   }));
 
   it('handles user username-already-exists response', async(() => {
-    fixture.whenStable().then(() => {
-      expect(component.duplicateUsername).toBeFalsy();
-      formUsername('already-existing-user');
-      component.onSubmit();
-      expect(component.duplicateUsername).toBeTruthy();
-      fixture.detectChanges();
-      expect(el.querySelector('#duplicate-username')).toBeTruthy();
-    });
+    expect(component.duplicateUsername).toBeFalsy();
+    const testUser = { username: 'alreadyExistingUser', password: 'secret' }
+    component.signupForm.setValue(testUser);
+    component.onSubmit(testUser);
+    expect(component.duplicateUsername).toBeTruthy();
+    fixture.detectChanges();
+    expect(el.querySelector('#duplicate-username')).toBeTruthy();
   }));
 
   it('handles error response', async(() => {
-    fixture.whenStable().then(() => {
-      expect(component.remoteError).toBeFalsy();
-      formUsername('give-me-error');
-      component.onSubmit();
-      expect(component.remoteError).toBeTruthy();
-      fixture.detectChanges();
-      expect(el.querySelector('#remote-error')).toBeTruthy();
-    });
+    expect(component.remoteError).toBeFalsy();
+    const testUser = { username: 'giveMeError', password: 'secret' }
+    component.signupForm.setValue(testUser);
+    component.onSubmit(testUser);
+    expect(component.remoteError).toBeTruthy();
+    fixture.detectChanges();
+    expect(el.querySelector('#remote-error')).toBeTruthy();
   }));
 
 });
