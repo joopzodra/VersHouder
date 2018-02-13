@@ -33,24 +33,21 @@ export class AuthService {
   private backendUrl: string;
   public redirectUrl = '/';
 
-  constructor(private http: HttpClient, private router: Router, @Inject(BACKEND_URL) backendUrl: string) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(BACKEND_URL) backendUrl: string
+  ) {
     this.backendUrl = backendUrl;
     const cookies = cookie.parse(document.cookie);
-    if (cookies.auth === 'yes') {
-      this.getUsername();
-    }
   }
 
-  private getUsername() {
-    this.http.get<{ username: string }>(this.backendUrl + '/auth/who', {
+  public getUsername() {
+    return this.http.get<{ username: string }>(this.backendUrl + '/auth/who', {
       headers: this.headers
     })
-      .subscribe(res => {
-        if (res.username) {
-          this._username.next(res.username);
-        }
-      },
-        err => console.log(err)); // TO DO error handling 
+    .map(res => res.username)
+    .do(username => {this._username.next(username); console.log('authservice,', username)});
   }
 
   public login(user: User) {
@@ -76,8 +73,7 @@ export class AuthService {
       .subscribe(res => {
         this._username.next(undefined);
         document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        this.router.navigate(['/']);
-        this.reload();
+        this.router.navigate(['/auth/login']);
       },
         (err: HttpErrorResponse) => alert('Uitloggen mislukt. De database reageert niet.')
       );
@@ -90,10 +86,6 @@ export class AuthService {
       .pipe(
         map(() => this.router.navigate(['/']))
       );
-  }
-
-  private reload() {
-    location.reload(); // Reloads the app; there's no elegant way to reload only the current component is its the / component
   }
 
 }

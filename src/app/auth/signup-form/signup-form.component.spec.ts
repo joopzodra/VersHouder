@@ -44,7 +44,7 @@ describe('SignupFormComponent', () => {
   it('submits username and password', async(() => {
     const spy = spyOn(authService, 'signup').and.callThrough();
     const testUser = { username: 'goodUser', password: 'secret' }
-    component.signupForm.setValue(testUser); console.log(component.signupForm)
+    component.signupForm.setValue(testUser);
     component.onSubmit(testUser);
     expect(spy).toHaveBeenCalledWith({ username: 'goodUser', password: 'secret' });
   }));

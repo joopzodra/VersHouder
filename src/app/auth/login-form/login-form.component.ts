@@ -44,7 +44,7 @@ export class LoginFormComponent implements OnInit {
       // If login has succes, an 'auth=yes' cookie is set and user is navigated away from login component, so we don't need to handle the success case.
       .subscribe(
         () => { },
-        (error: HttpErrorResponse) => { console.log(error)
+        (error: HttpErrorResponse) => {
           switch (error.error) {
             case 'unauth-user':
               this.alertUserDenied();

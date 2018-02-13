@@ -18,13 +18,14 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 //import 'rxjs/add/operator/delay';
 //import 'rxjs/add/operator/filter';
 //import 'rxjs/add/operator/toPromise';
 //import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/mergeMap';
 //import 'rxjs/add/operator/combineLatest'; //BEWARE: combineLatest is available both as operator and observable
-//import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/withLatestFrom';
 
 //import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';

@@ -10,6 +10,7 @@ import { ShowErrorComponent } from './show-error/show-error.component';
 
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth.guard';
+import { NotLoggedInGuard } from './services/not-logged-in.guard';
 import { BACKEND_URL, URL } from '../app-tokens';
 import { UserBadgeAndLogoutComponent } from './user-badge-and-logout/user-badge-and-logout.component';
 
@@ -28,6 +29,7 @@ import { UserBadgeAndLogoutComponent } from './user-badge-and-logout/user-badge-
   providers: [
     AuthService,
     AuthGuard,
+    NotLoggedInGuard,
     {provide: BACKEND_URL, useValue: URL},
     Title
   ],

@@ -42,7 +42,7 @@ export class SignupFormComponent {
     }
     this.authService.signup(formValue)
       // If login has succes, user is navigated to login component, so we don't need to handle the success case.
-      .subscribe(() => { }, (error: HttpErrorResponse) => { console.log('rrrr', error)
+      .subscribe(() => { }, (error: HttpErrorResponse) => {
         switch (error.error) { 
           case 'username-already-exists':
             this.alertDuplicateUsername();

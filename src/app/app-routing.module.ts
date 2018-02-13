@@ -13,7 +13,7 @@ export function loadAuthModule() {
 
 const appRoutes: Routes = [
   {
-    path: 'db-manager', /*canActivate: [AuthGuard],*/ component: DbManagerComponent,
+    path: 'db-manager', canActivate: [AuthGuard], component: DbManagerComponent,
     children: [
       { path: '', redirectTo: 'poems', pathMatch: 'full'},
       { path: 'poems', component: PoemsListComponent, data: { title: 'Gedichten'} }

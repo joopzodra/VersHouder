@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './services/auth.guard';
+import {NotLoggedInGuard} from './services/not-logged-in.guard';
 
 import { AuthComponent } from './auth.component';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -13,8 +14,8 @@ const authRoutes: Routes = [
     path: 'auth',
     component: AuthComponent,
     children: [
-      { path: 'login', component: LoginFormComponent, data: { title: 'Inloggen' } },
-      { path: 'signup', component: SignupFormComponent, data: { title: 'Aanmelden' } },
+      { path: 'login', canActivate:[NotLoggedInGuard], component: LoginFormComponent, data: { title: 'Inloggen' } },
+      { path: 'signup', canActivate:[NotLoggedInGuard], component: SignupFormComponent, data: { title: 'Aanmelden' } },
       { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
       /* { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] }*/
     ]
