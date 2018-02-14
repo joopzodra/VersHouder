@@ -7,6 +7,12 @@ import { BACKEND_URL, URL } from '../../app-tokens';
 import { Poem, Poet, Bundle } from '../../models/poem-poet-bundle';
 import { PoemsListItem } from '../../models/list-items';
 
+/* The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
+ * The service receives queries from the SearchComponent.
+ * It pushes the responses from the backend as listItems to subscribers.
+ * Subscribers are the PoemsListComponent, ....
+ */
+
 @Injectable()
 export class DbManagerService {
 

@@ -51,7 +51,7 @@ describe('ShowErrorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('gives an error when the username doesn\'t match the input element\'s constraints', () => {
+  it('shows warnings when the user input doesn\'t match the input element\'s constraints', () => {
       const control = component.loginForm.get('username');
       control.setValue('jim')
       control.markAsTouched();

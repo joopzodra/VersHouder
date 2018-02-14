@@ -4,8 +4,8 @@
     <th>Titel</th>
     <th>Beginregels</th>
   </tr>
-  <tr *ngIf="entries?.length===0"><td colspan="3">Geen zoekresultaten</td></tr>
-  <tr class="hoverable" *ngFor="let row of listItems$ | async" (click)="showDetails(row.id)">
+  <tr class="no-list-items-row" *ngIf="entries?.length===0"><td colspan="3">Geen zoekresultaten</td></tr>
+  <tr class="hoverable list-item-row" *ngFor="let row of listItems$ | async" (click)="showDetails(row.id)">
     <td>{{row.poet_name ? row.poet_name : '–'}}</td>
     <td>{{row.title ? row.title : '–'}}</td>
     <td>{{row.text?.split('\n')[0]}}<br>{{row.text?.split('\n')[1]}}</td>

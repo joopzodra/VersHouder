@@ -7,9 +7,10 @@ import { User } from '../models/user';
 
 export class MockAuthService {
 
-  public username$ = new BehaviorSubject<string>(undefined);
+  username$ = new BehaviorSubject<string>(undefined);
+  isAuthenticatedOnBackend: boolean;
 
-  public login(value: User): Observable<any> {
+  login(value: User): Observable<any> {
     if (value.username === 'bad-user') {
      return Observable.throw({ status: 401, statusText: 'unauth-user', error: 'unauth-user' });     
     }
@@ -19,7 +20,7 @@ export class MockAuthService {
     else return Observable.of(''); // Necessary to heaten up observable; otherwise error: Cannot read property 'subscribe' of undefined
   }
   
-  public signup(value: User): Observable<any> {
+  signup(value: User): Observable<any> {
     if (value.username === 'alreadyExistingUser') {
      return Observable.throw({status: 401, statusText: 'username-already-exists', error: 'username-already-exists'});     
     }
@@ -27,4 +28,15 @@ export class MockAuthService {
      return Observable.throw({ status: 500, statusText: 'Database error (JR)', error: 'remote-error' })
     }
     else return Observable.of(''); // Necessary to heaten up observable,
-  }}
+  }
+
+  getUsername(): Observable<any> {
+    if (this.isAuthenticatedOnBackend) {
+      return Observable.of({username: 'good-user'});
+    } else {
+      return Observable.throw({ status: 401, statusText: 'unauth-user', error: 'unauth-user' });
+    }    
+  }
+
+  logout() {}
+}

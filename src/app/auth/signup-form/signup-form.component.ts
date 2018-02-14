@@ -8,6 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { User } from '../../models/user';
 
+/* The SignupFormComponent creates a signup form.
+ * On submit it calls the AuthService signup method with the formvalue as argument.
+ * In the template it uses the ShowErrorComponent to show error messages when the formvalue constraints are not met.
+ */
+
 @Component({
   templateUrl: './signup-form.component.html',
   styleUrls: ['./signup-form.component.scss']

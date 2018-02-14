@@ -22,8 +22,7 @@ describe('LoginFormComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: 'Test title' } } } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-      .compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -34,11 +33,11 @@ describe('LoginFormComponent', () => {
     authService = TestBed.get(AuthService);
   });
 
-  it('should be created', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('submits username and password', async(() => {
+  it('after a submit it sends the submitted username and password to AuthService\'s login method', async(() => {
     const spy = spyOn(authService, 'login').and.callThrough();
     const testUser = { username: 'good-user', password: 'secret' }
     component.loginForm.setValue(testUser);
@@ -46,7 +45,7 @@ describe('LoginFormComponent', () => {
     expect(spy).toHaveBeenCalledWith({ username: 'good-user', password: 'secret' });
   }));
 
-  it('handles user denied response', async(() => {
+  it('handles user denied response if it receives one from the backend by the AuthService\'s login method', async(() => {
     expect(component.userDenied).toBeFalsy();
     const testUser = { username: 'bad-user', password: 'secret' };
     component.loginForm.setValue(testUser);
@@ -56,7 +55,7 @@ describe('LoginFormComponent', () => {
     expect(el.querySelector('#user-denied')).toBeTruthy();
   }));
 
-  it('handles error response', async(() => {
+  it('handles error response if it receives one from the backend by the AuthService\'s login method', async(() => {
     expect(component.remoteError).toBeFalsy();
     const testUser = { username: 'give-me-error', password: 'secret' }
     component.loginForm.setValue(testUser);

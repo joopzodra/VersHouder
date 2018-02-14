@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+/* The HeaderComponent creates the app header. It contains the app title. And it contains the UserBadgeAndLogoutComponent as it's childcomponent.
+ */
+
 @Component({
   selector: 'jr-header',
   templateUrl: './header.component.html',
@@ -7,6 +10,6 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
-  title = 'gedichtendDb';
+  title = 'VersHouder';
 
 }

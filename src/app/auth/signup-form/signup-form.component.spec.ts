@@ -25,8 +25,7 @@ describe('SignupFormComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: 'Test title' } } } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-      .compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -41,7 +40,7 @@ describe('SignupFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('submits username and password', async(() => {
+  it('after a submit it sends the submitted username and password to AuthService\'s submit method', async(() => {
     const spy = spyOn(authService, 'signup').and.callThrough();
     const testUser = { username: 'goodUser', password: 'secret' }
     component.signupForm.setValue(testUser);
@@ -49,7 +48,7 @@ describe('SignupFormComponent', () => {
     expect(spy).toHaveBeenCalledWith({ username: 'goodUser', password: 'secret' });
   }));
 
-  it('handles user username-already-exists response', async(() => {
+  it('handles user username-already-exists response if it receives one from the backend by the AuthService\'s signup method', async(() => {
     expect(component.duplicateUsername).toBeFalsy();
     const testUser = { username: 'alreadyExistingUser', password: 'secret' }
     component.signupForm.setValue(testUser);
@@ -59,7 +58,7 @@ describe('SignupFormComponent', () => {
     expect(el.querySelector('#duplicate-username')).toBeTruthy();
   }));
 
-  it('handles error response', async(() => {
+  it('handles error response if it receives one from the backend by the AuthService\'s signup method', async(() => {
     expect(component.remoteError).toBeFalsy();
     const testUser = { username: 'giveMeError', password: 'secret' }
     component.signupForm.setValue(testUser);

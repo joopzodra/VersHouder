@@ -5,8 +5,9 @@ import * as cookie from 'cookie';
 
 import { AuthService } from './auth.service';
 
-/* Allows a user only to navigate to the login or signup pages if he's not logged in. Otherwise he's redirected to the app's root page.
- * Loggin in twice or creating a new account when already logged in is no problem, but it's unnessecary. Therefore we redirect.
+/* The NotLoggedInGuard allows a user only to navigate to the login or signup components if he's not logged in. Otherwise he's redirected to the app's root page.
+ * A user is logged if there is an valid auth-cookie or the app has set a username, so these two conditions are tested. Of one of these are met, the route is blocked.
+ * Why this guard? Although loggin in twice or creating a new account when already logged in is no problem, we consider it unnessecary. Therefore we block the route and redirect.
  * If the user wants to create another account, he first has to log out.
  */
 

@@ -4,7 +4,7 @@ export interface PoemsListItem {
   bundle_id?: number,
   bundle_title?: string,
   poet_id?: number,
-  poet_name: string,
+  poet_name?: string,
   title?: string
 }
 
