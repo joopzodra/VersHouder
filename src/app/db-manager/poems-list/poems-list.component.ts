@@ -6,6 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { DbManagerService } from '../services/db-manager.service';
 import {PoemsListItem} from '../../models/list-items';
 
+/* The PoemsListComponent shows a list with poems.
+ * It receives the poems from the DbManagerService.
+ * (Which poems it receives, is determined by the SearchComponent.)
+ */
+
 @Component({
   selector: 'jr-poems-list',
   templateUrl: './poems-list.component.html'

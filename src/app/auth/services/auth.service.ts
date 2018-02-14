@@ -10,8 +10,10 @@ import * as cookie from 'cookie';
 import { User } from '../../models/user';
 import { BACKEND_URL, URL } from '../../app-tokens';
 
-/* This service has absolute links in the this.router.navigate() calls and redirectUrl property. You'll probably have to change them when using the auth-module in another app.
- *
+/* The AuthService sents requests to and receives responses from the backend, concerning the user authentication.
+ * The service is used by the LoginFormComponent, SignupComponent and UserBadgeAndLogoutComponent.
+ * It pushes the current username, if any, to subscribers.
+ * It also exposes a method to retrieve the current username from the backend, to be used by routing guards. 
  */
 
 interface LoginResponse {
@@ -47,7 +49,7 @@ export class AuthService {
       headers: this.headers
     })
     .map(res => res.username)
-    .do(username => {this._username.next(username); console.log('authservice,', username)});
+    .do(username => this._username.next(username));
   }
 
   public login(user: User) {
@@ -65,7 +67,6 @@ export class AuthService {
       );
   }
 
-  // TO DO: use Angular Location instead of reload() ........ 
   public logout() {
     this.http.get<LogoutResponse>(this.backendUrl + '/auth/logout', {
       headers: this.headers
@@ -75,7 +76,7 @@ export class AuthService {
         document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         this.router.navigate(['/auth/login']);
       },
-        (err: HttpErrorResponse) => alert('Uitloggen mislukt. De database reageert niet.')
+        (err: HttpErrorResponse) => alert('Uitloggen mislukt. De database reageert niet. Om uit te loggen kun je ook de browser afsluiten.')
       );
   }
 

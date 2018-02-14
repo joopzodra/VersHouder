@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
         this.username = username;
         return true;
       })
-      .catch(err => {
+      .catch((err: any) => {
         document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         this.router.navigate(['/auth/login']);
         console.log(err);

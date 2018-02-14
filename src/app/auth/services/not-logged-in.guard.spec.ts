@@ -1,5 +1,7 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { NotLoggedInGuard } from './not-logged-in.guard';
 import { AuthService } from '../services/auth.service';
@@ -7,6 +9,11 @@ import { MockAuthService } from '../../testing/mock-auth-service';
 import { StubRouter } from '../../testing/stub-router';
 
 describe('NotLoggedInGuard', () => {
+
+  let service: AuthService;
+  let router: Router;
+  let guard: NotLoggedInGuard;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -17,7 +24,38 @@ describe('NotLoggedInGuard', () => {
     });
   });
 
-  it('should ...', inject([NotLoggedInGuard], (guard: NotLoggedInGuard) => {
-    expect(guard).toBeTruthy();
+  beforeEach(inject([AuthService, Router, NotLoggedInGuard], (_service: AuthService, _router: Router, _guard: NotLoggedInGuard) => {
+    service = _service;
+    router = _router;
+    guard = _guard;
   }));
+
+  it('should be created', () => {
+    expect(guard).toBeTruthy();
+  });
+
+  it('blocks a route if there is a valid auth-cookie (which means the user is logged in; note: this guard is used to test if the user can navigate to the login and signup pages)', () => {
+    document.cookie = 'auth=yes; path=/; max-age=1800';
+    const spy = spyOn(router, 'navigate');
+    (<boolean>guard.canActivate(<any>{}, <any>{}));
+    expect(spy).toHaveBeenCalledWith(['/']);
+  });
+
+  it('blocks a route if there is not a valid auth-cookie but the app has set a username (which means the user is logged in but the auth-cookie has been removed manually or by accident', () => {
+    document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    (<any>service).username$.next('good-user');
+    const spy = spyOn(router, 'navigate');
+    (<Observable<boolean>>guard.canActivate(<any>{}, <any>{})).subscribe(() => {
+      expect(spy).toHaveBeenCalledWith(['/']);
+    });
+  });
+
+  it('allows a route if there is not a valid auth-cookie nor the app has set a username', () => {
+    document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    (<any>service).username$.next(undefined);
+    const spy = spyOn(router, 'navigate');
+    (<Observable<boolean>>guard.canActivate(<any>{}, <any>{})).subscribe(res => {
+      expect(res).toBeTruthy();
+    });
+  });
 });

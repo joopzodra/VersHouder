@@ -6,12 +6,18 @@ import { Observable } from 'rxjs/Observable'
 
 import { DbManagerService } from '../services/db-manager.service';
 
+/* The SearchComponent offers a seach field (html input element) by which the user can search for listItems (poems, poets or bundles).
+ * When the user types a search term, a query is sent to the DbManagerService's getListItems method.
+ * The user can select in which column of the listItems table he wants to search (this value is set in the searchFor formcontrol).
+ * The user can also select the maximum number of listItems per page.
+ */
+
 @Component({
   selector: 'jr-search-entries',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit, OnDestroy {  
+export class SearchComponent implements OnInit, OnDestroy {
   query = '';
   @Input() listType: string;
   searchForm: FormGroup;
@@ -26,9 +32,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-   this.searchFormSubscription =  this.searchForm.valueChanges
+    this.searchFormSubscription = this.searchForm.valueChanges
       .debounceTime(200)
-      .subscribe((formValue: { searchFor: string, query: string, maxItemsPerPage: string }) => this.dbManagerService.getListItems(this.listType, formValue)) // Toevoegen: this.offset, +this.maxListItems);
+      .subscribe((formValue: { searchFor: string, query: string, maxItemsPerPage: string }) => {
+        this.dbManagerService.getListItems(this.listType, formValue)
+      }); // Toevoegen: this.offset, +this.maxListItems);
     this.searchForm.patchValue({ searchFor: this.defaultSearchFor() });
   }
 

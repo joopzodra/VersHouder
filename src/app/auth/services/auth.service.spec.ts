@@ -14,13 +14,9 @@ describe('AuthService', () => {
 
   let service: AuthService;
   let httpMock: HttpTestingController;
-  //let http: HttpClient;
   let router: Router;
 
   beforeEach(() => {
-    // After succesfull login a cookie is set. When it's set, a new instance of AuthService calls the server to get the username. We must prevent this call, since it makes all tests fail. Therefore delete the cookie before each new instance.
-    document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
@@ -36,7 +32,6 @@ describe('AuthService', () => {
   beforeEach(inject([AuthService, /*HttpClient,*/ HttpTestingController, Router], (_service: AuthService, /*_http: HttpClient,*/ _httpMock: HttpTestingController, _router: Router) => {
     service = _service;
     httpMock = _httpMock;
-    //http = _http;
     router = _router;
   }));
 
@@ -48,7 +43,7 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('logs in', async(() => {
+  it('login method sends a request to the backend, if the response contains an authorized user it pushes the username in the username stream and navigates to the app root', async(() => {
     let userName;
     service.username$.subscribe(username => userName = username);
     expect(userName).toBe(undefined);
@@ -61,28 +56,38 @@ describe('AuthService', () => {
     expect(userName).toBe('good-user');
   }));
 
-  it('handles login errors', async(() => {
+  it('when login method receives an error from the backend, it does nothing (leaving it to the caller to handle the error)', async(() => {
+    let userName;
+    service.username$.subscribe(username => userName = username);
+    expect(userName).toBe(undefined);
     const spy = spyOn(router, 'navigate');
     service.login({ username: 'good-user', password: 'secret' })
       .subscribe(() => { }, error => expect(error.status).toBe(500));
     const req = httpMock.expectOne(service['backendUrl'] + '/auth/login');
     req.flush(null, { status: 500, statusText: 'Database error (JR)' });
     expect(spy).not.toHaveBeenCalled();
+    expect(userName).toBe(undefined);
   }));
 
-  it('logs out', async(() => {
+  it('logout method sends a request to the backend, pushes \'undefined\' in the username stream and navigates to the login page', async(() => {
     let userName;
     (<any>service)['_username'].next('user');
     service.username$.subscribe(username => userName = username);
     expect(userName).toBe('user');
     const spyNav = spyOn(router, 'navigate');
-    const spyReload = spyOn((<any>service), 'reload');
     service.logout();
     const req = httpMock.expectOne(service['backendUrl'] + '/auth/logout');
-    req.flush(Observable.of({ loggedOut: true }));
-    expect(spyNav).toHaveBeenCalledWith(['/']);
-    expect(spyReload).toHaveBeenCalled();
+    req.flush({ loggedOut: true });
+    expect(spyNav).toHaveBeenCalledWith(['/auth/login']);
     expect(userName).toBe(undefined);
+  }));
+
+  it('logout method sends a window.alert if the backend responds with an error', async(() => {
+    const spy = spyOn(window, 'alert');
+    service.logout();
+    const req = httpMock.expectOne(service['backendUrl'] + '/auth/logout');
+    req.flush({errorMessage: 'Uh oh!'}, { status: 500, statusText: 'Database error (JR)' });
+    expect(spy).toHaveBeenCalled();
   }));
 
   it('signs up', async(() => {

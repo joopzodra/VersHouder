@@ -9,8 +9,7 @@ describe('NavigationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ NavigationComponent ]
-    })
-    .compileComponents();
+    });
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('NavigationComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create, contains no further logic to test', () => {
     expect(component).toBeTruthy();
   });
 });
