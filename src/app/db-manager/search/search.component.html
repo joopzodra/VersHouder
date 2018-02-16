@@ -1,4 +1,4 @@
-<div [ngSwitch]="listType"><p>listType: {{listType}}</p>
+<div [ngSwitch]="listType">
   <form [formGroup]="searchForm" class="w3-container w3-padding-16">
 
     <div *ngSwitchCase="'poems'" class="searchboxHeader">Zoek in de gedichten naar:
@@ -31,16 +31,13 @@
     </div> -->
 
     <div class="w3-container w3-border-left w3-border-right w3-border-bottom w3-padding-24"> Aantal items per pagina:
-      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="20" formNameControl="maxItemsPerPage">
+      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="20" formControlName="maxItemsPerPage">
       <label>20</label>
-      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="50" formNameControl="maxItemsPerPage">
+      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="50" formControlName="maxItemsPerPage">
       <label>50</label>
-      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="100" formNameControl="maxItemsPerPage">
+      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="100" formControlName="maxItemsPerPage">
       <label>100</label> 
     </div>
 
   </form> 
 </div>
-
-<p>De uitslag:{{entries$ | async}} </p>
-

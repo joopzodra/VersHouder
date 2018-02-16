@@ -24,6 +24,6 @@ export class PoemsListComponent implements OnInit {
   ngOnInit() {
     const title = this.route.snapshot.data['title'];
     this.titleService.setTitle(title);
-    this.listItems$ = this.dbManagerService.listItems$
+    this.listItems$ = <Observable<PoemsListItem[]>>this.dbManagerService.listItems$;
   }
 }
