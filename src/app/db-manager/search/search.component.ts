@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnChanges, Input, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -17,7 +17,7 @@ import { DbManagerService } from '../services/db-manager.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnChanges, OnDestroy, OnChanges {  
   query = '';
   @Input() listType: string;
   searchForm: FormGroup;
@@ -27,7 +27,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.searchForm = fb.group({
       searchFor: [this.defaultSearchFor],
       query: [''],
-      maxItemsPerPage: ['']
+      maxItemsPerPage: ['100']
     })
   }
 
@@ -38,6 +38,10 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.dbManagerService.getListItems(this.listType, formValue)
       }); // Toevoegen: this.offset, +this.maxListItems);
     this.searchForm.patchValue({ searchFor: this.defaultSearchFor() });
+  }
+
+  ngOnChanges(){
+    this.searchForm.reset({searchFor: this.defaultSearchFor(), query: '', maxItemsPerPage: '100'});
   }
 
   defaultSearchFor() {

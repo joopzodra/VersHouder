@@ -1,0 +1,13 @@
+<table class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
+  <tr class="w3-teal">
+    <th>Titel</th>
+    <th>Dichter of samensteller</th>
+    <th>Jaar van uitgave</th>
+  </tr>
+  <tr *ngIf="entries?.length===0"><td colspan="3">Geen zoekresultaten</td></tr>
+  <tr class="hoverable" *ngFor="let row of listItems$ | async" (click)="showDetails(row.id)">
+    <td>{{row.title ? row.title : '–'}}</td>
+    <td>{{row.poet_name ? row.poet_name : '–'}}</td>
+    <td>{{row.year ? row.year : '–'}}</td>
+  </tr>
+</table>

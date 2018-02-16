@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { BACKEND_URL, URL } from '../../app-tokens';
 import { Poem, Poet, Bundle } from '../../models/poem-poet-bundle';
-import { PoemsListItem } from '../../models/list-items';
+import { PoemsListItem, PoetsListItem, BundlesListItem } from '../../models/list-items';
 
 /* The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
  * The service receives queries from the SearchComponent.
@@ -18,7 +18,7 @@ export class DbManagerService {
 
   private headers = new HttpHeaders().set('withCredentials', 'true');
   private backendUrl: string;
-  private _listItems = new Subject<PoemsListItem[]>();
+  private _listItems = new Subject<PoemsListItem[] | PoetsListItem[] | BundlesListItem[]>();
   public readonly listItems$ = this._listItems.asObservable();
 
   constructor(private http: HttpClient, @Inject(BACKEND_URL) backendUrl: string) {
@@ -33,7 +33,7 @@ export class DbManagerService {
         .set('column', formValue.searchFor)
         .set('maxItems', formValue.maxItemsPerPage)
     }
-    this.http.get<PoemsListItem[]>(this.backendUrl + '/manager/find-all', options)
+    this.http.get<PoemsListItem[] | PoetsListItem[] | BundlesListItem[]>(this.backendUrl + '/manager/find-all', options)
       .subscribe(listItems => this._listItems.next(listItems), this.handleError);
   }
 
