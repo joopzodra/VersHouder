@@ -41,21 +41,19 @@ describe('NotLoggedInGuard', () => {
     expect(spy).toHaveBeenCalledWith(['/']);
   });
 
-  it('blocks a route if there is not a valid auth-cookie but the app has set a username (which means the user is logged in but the auth-cookie has been removed manually or by accident', () => {
+  it('allows a route if there is not a valid auth-cookie. It does so even when the app has set a username. This situation happens when a logged-in user manually removed the cookie by clearing the browser data.', () => {
     document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     (<any>service).username$.next('good-user');
-    const spy = spyOn(router, 'navigate');
-    (<Observable<boolean>>guard.canActivate(<any>{}, <any>{})).subscribe(() => {
-      expect(spy).toHaveBeenCalledWith(['/']);
-    });
+    const canActivate = (<boolean>guard.canActivate(<any>{}, <any>{}));
+    expect(canActivate).toBeTruthy();
   });
 
-  it('allows a route if there is not a valid auth-cookie nor the app has set a username', () => {
+  it('when it allows a route if there is not a valid auth-cookie, it also calls the AuthService\'s clearUsername method.', () => {
     document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    (<any>service).username$.next(undefined);
-    const spy = spyOn(router, 'navigate');
-    (<Observable<boolean>>guard.canActivate(<any>{}, <any>{})).subscribe(res => {
-      expect(res).toBeTruthy();
+    (<any>service).username$.next('good-user');
+    const canActivate = (<boolean>guard.canActivate(<any>{}, <any>{}));
+    (<any>service).username$.subscribe((username: string) => {
+      expect(username).toBeUndefined(); // 
     });
   });
 });

@@ -15,12 +15,12 @@ export function loadAuthModule() {
 
 const appRoutes: Routes = [
   {
-    path: 'db-manager', canActivate: [AuthGuard], component: DbManagerComponent,
+    path: 'db-manager', component: DbManagerComponent,
     children: [
       { path: '', redirectTo: 'poems', pathMatch: 'full' },
-      { path: 'poems', component: PoemsListComponent, data: { title: 'Gedichten' } },
-      { path: 'poets', component: PoetsListComponent, data: { title: 'Dichters' } },
-      { path: 'bundles', component: BundlesListComponent, data: { title: 'Gedichtenbundels' } }
+      { path: 'poems', component: PoemsListComponent, canActivate: [AuthGuard], data: { title: 'Gedichten' } },
+      { path: 'poets', component: PoetsListComponent, canActivate: [AuthGuard], data: { title: 'Dichters' } },
+      { path: 'bundles', component: BundlesListComponent, canActivate: [AuthGuard], data: { title: 'Gedichtenbundels' } }
     ]
   },
   { path: '', redirectTo: 'db-manager', pathMatch: 'full' },

@@ -39,4 +39,8 @@ export class MockAuthService {
   }
 
   logout() {}
+
+  clearUsername() {
+    this.username$.next(undefined);
+  }
 }

@@ -48,8 +48,8 @@ export class AuthService {
     return this.http.get<{ username: string }>(this.backendUrl + '/auth/who', {
       headers: this.headers
     })
-    .map(res => res.username)
-    .do(username => this._username.next(username));
+      .map(res => res.username)
+      .do(username => this._username.next(username));
   }
 
   public login(user: User) {
@@ -87,6 +87,15 @@ export class AuthService {
       .pipe(
         map(() => this.router.navigate(['/']))
       );
+  }
+
+  public clearUsername() {
+    this._username.next(undefined);
+    // When we clear the username, make sure we're logged out at the backend too.
+    this.http.get<LogoutResponse>(this.backendUrl + '/auth/logout', {
+      headers: this.headers
+    })
+      .subscribe(() => { });
   }
 
 }
