@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { filter } from 'rxjs/operators';
 
 /* The DbManagerComponent is the parentcomponent of:
  *  - the NavigationComponent,
@@ -19,13 +20,15 @@ export class DbManagerComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) {
     this.routerSubscription = this.router.events
-      .filter(event => event instanceof NavigationEnd)
+      .pipe(
+        filter(event => event instanceof NavigationEnd)
+      )
       .subscribe(() => {
         const url = this.router.url;
         const urlLastSegment = url.split('/db-manager/')[1];
         this.listType = urlLastSegment;
       });
-   }
+  }
 
   ngOnInit() {
 

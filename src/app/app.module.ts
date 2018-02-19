@@ -14,10 +14,11 @@ import { NavigationComponent } from './db-manager/navigation/navigation.componen
 import { SearchComponent } from './db-manager/search/search.component';
 import { PoemsListComponent } from './db-manager/poems-list/poems-list.component';
 import { PoetsListComponent } from './db-manager/poets-list/poets-list.component';
+import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
+import { EditComponent } from './db-manager/edit/edit.component';
 
 import { DbManagerService } from './db-manager/services/db-manager.service';
-import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
-
+import { ListItemsStore } from './db-manager/services/list-items.store';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.com
     PoemsListComponent,
     PoetsListComponent,
     BundlesListComponent,
+    EditComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,8 @@ import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.com
   ],
   providers: [
     Title,
-    DbManagerService
+    DbManagerService,
+    ListItemsStore
   ],
   bootstrap: [AppComponent]
 })

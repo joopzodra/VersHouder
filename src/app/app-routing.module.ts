@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { PoemsListComponent } from './db-manager/poems-list/poems-list.component';
 import { PoetsListComponent } from './db-manager/poets-list/poets-list.component';
 import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
+import { EditComponent } from './db-manager/edit/edit.component';
 //import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export function loadAuthModule() {
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
       { path: 'bundles', component: BundlesListComponent, canActivate: [AuthGuard], data: { title: 'Gedichtenbundels' } }
     ]
   },
+  { path: 'db-manager/edit', component: EditComponent, canActivate: [AuthGuard], data: { title: 'Onderdeel toevoegen/wijzigen' } },
   { path: '', redirectTo: 'db-manager', pathMatch: 'full' },
   //{ path: '**', component: PageNotFoundComponent }
 ];

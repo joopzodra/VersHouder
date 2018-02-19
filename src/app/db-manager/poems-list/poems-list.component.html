@@ -1,4 +1,4 @@
-<table class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
+<table *ngIf="!(searching$ | async)" class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
   <tr class="w3-teal">
     <th>Dichter</th>
     <th>Titel</th>
@@ -11,3 +11,4 @@
     <td>{{row.text?.split('\n')[0]}}<br>{{row.text?.split('\n')[1]}}</td>
   </tr>
 </table>
+<div *ngIf="searching$ | async" class="spinner w3-spin"></div>

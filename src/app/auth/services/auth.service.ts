@@ -3,8 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { catchError, map, tap } from 'rxjs/operators';
 import * as cookie from 'cookie';
 
 import { User } from '../../models/user';
@@ -48,8 +47,10 @@ export class AuthService {
     return this.http.get<{ username: string }>(this.backendUrl + '/auth/who', {
       headers: this.headers
     })
-      .map(res => res.username)
-      .do(username => this._username.next(username));
+      .pipe(
+        map(res => res.username),
+        tap(username => this._username.next(username))
+      );
   }
 
   public login(user: User) {
@@ -61,7 +62,8 @@ export class AuthService {
           if (res.authUser === true) {
             document.cookie = 'auth=yes; path=/; max-age=1800';
             this._username.next(user.username);
-            this.router.navigate([this.redirectUrl]);
+            const routeAndQueryParams = this.routeAndQueryParams(this.redirectUrl);
+            this.router.navigate([routeAndQueryParams[0]], routeAndQueryParams[1]);
           }
         })
       );
@@ -96,6 +98,21 @@ export class AuthService {
       headers: this.headers
     })
       .subscribe(() => { });
+  }
+
+  private routeAndQueryParams(url: string) {
+    const splitUrl = url.split('?');
+    const routeFragment = splitUrl[0];
+    const queryParams = splitUrl[1];
+    if (!queryParams) {
+      return [routeFragment];
+    } else {
+        const queryParamsObj = <any>{queryParams: {}};
+        queryParams.split('&')
+          .map(keyValue => keyValue.split('='))
+          .forEach(([key, value]) => queryParamsObj.queryParams[key] = value);
+      return [routeFragment, queryParamsObj];
+    }
   }
 
 }

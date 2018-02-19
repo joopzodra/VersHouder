@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { map, catchError } from 'rxjs/operators';
 import * as cookie from 'cookie';
 
 import { AuthService } from './auth.service';
@@ -19,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {
     this.authService.username$.subscribe(username => this.username = username);
-   }
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {
     const cookies = cookie.parse(document.cookie);
@@ -33,16 +34,18 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     return this.authService.getUsername()
-      .map(username => {
-        this.username = username;
-        return true;
-      })
-      .catch((err: any) => {
-        document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        this.router.navigate(['/auth/login']);
-        console.log(err);
-        return Observable.of(false);
-      });
+      .pipe(
+        map(username => {
+          this.username = username;
+          return true;
+        }),
+        catchError((err: any) => {
+          document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+          this.router.navigate(['/auth/login']);
+          console.log(err);
+          return Observable.of(false);
+        })
+      );
   }
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {

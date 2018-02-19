@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { DbManagerService } from '../services/db-manager.service';
-import {PoemsListItem} from '../../models/list-items';
+import { ListItemsStore } from '../services/list-items.store';
+import { PoemsListItem } from '../../models/list-items';
 
 /* The PoemsListComponent shows a list with poems.
  * It receives the poems from the DbManagerService.
@@ -16,14 +17,21 @@ import {PoemsListItem} from '../../models/list-items';
   templateUrl: './poems-list.component.html'
 })
 export class PoemsListComponent implements OnInit {
-  
-  listItems$: Observable<PoemsListItem[]>;
 
-  constructor(private titleService: Title, private route: ActivatedRoute, private dbManagerService: DbManagerService ) { }
+  listItems$: Observable<PoemsListItem[]>;
+  searching$: Observable<boolean>;
+  
+  constructor(
+    private titleService: Title,
+    private route: ActivatedRoute,
+    private dbManagerService: DbManagerService,
+    private listItemsStore: ListItemsStore
+  ) { }
 
   ngOnInit() {
     const title = this.route.snapshot.data['title'];
     this.titleService.setTitle(title);
-    this.listItems$ = <Observable<PoemsListItem[]>>this.dbManagerService.listItems$;
+    this.listItems$ = <Observable<PoemsListItem[]>>this.listItemsStore.listItems$;
+    this.searching$ = this.dbManagerService.searching$;
   }
 }
