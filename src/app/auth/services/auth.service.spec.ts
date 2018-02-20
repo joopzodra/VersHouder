@@ -52,7 +52,7 @@ describe('AuthService', () => {
       .subscribe(() => { });
     const req = httpMock.expectOne(service['backendUrl'] + '/auth/login');
     req.flush({ authUser: true });
-    expect(spy).toHaveBeenCalledWith(['/']);
+    expect(spy).toHaveBeenCalledWith(['/'], undefined);
     expect(userName).toBe('good-user');
   }));
 

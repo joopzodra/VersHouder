@@ -33,6 +33,6 @@ export class PoetsListComponent implements OnInit {
   }
 
   editPoet(id: string) {
-    this.router.navigate(['/db-manager/edit'], {queryParams: {table: 'poets', poet_id: id}});
+    this.router.navigate(['/db-manager/edit'], {queryParams: {listType: 'poets', listItemId: id}});
   }
 }

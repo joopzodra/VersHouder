@@ -1,4 +1,5 @@
 export interface Poem {
+  id: number,
   text: string,
   title?: string,
   poetId?: number,
@@ -9,6 +10,7 @@ export interface Poem {
 }
 
 export interface Poet {
+  id: number,
   name: string,
   born?: number,
   died?: number,
@@ -16,6 +18,7 @@ export interface Poet {
 }
 
 export interface Bundle {
+  id: number,
   title: string,
   year?: number,
   poetId?: number,

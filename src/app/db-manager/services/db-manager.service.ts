@@ -5,9 +5,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { BACKEND_URL, URL } from '../../app-tokens';
 import { Poem, Poet, Bundle } from '../../models/poem-poet-bundle';
-import { PoemsListItem, PoetsListItem, BundlesListItem } from '../../models/list-items';
+import { ListItem } from '../../models/list-items';
 import { ListItemsStore, LOAD, ADD, EDIT, REMOVE } from './list-items.store';
-type ListItem = PoemsListItem | PoetsListItem | BundlesListItem;
 
 /* The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
  * The service receives queries from the SearchComponent.
@@ -64,6 +63,10 @@ export class DbManagerService {
           console.log(res);
         });
     }*/
+
+    editItem(){
+
+    }
 
 
   handleError(err: HttpErrorResponse) {

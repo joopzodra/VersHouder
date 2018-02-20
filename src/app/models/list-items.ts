@@ -24,3 +24,5 @@ export interface BundlesListItem {
   poetId?: number,
   //userId?: number
 }
+
+export type ListItem = PoemsListItem | PoetsListItem | BundlesListItem;

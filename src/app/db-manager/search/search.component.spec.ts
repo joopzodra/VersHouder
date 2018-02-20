@@ -42,12 +42,11 @@ describe('SearchComponent', () => {
   it('if the user types values in the search field, it passes these to the DbManagerService\'s getListItems method', fakeAsync(() => {
     component.listType = 'poems';
     const form = component.searchForm;
-    const stubSearch = {searchFor: 'poems', query: '', maxItemsPerPage: 100 };
-    dbManagerService.listItems$.subscribe(listItems => {
-      expect(listItems.length).toBe(2);
-    })
+    const stubSearch = {searchFor: 'poems.text', query: '', maxItemsPerPage: 100 };
+    const spy = spyOn(dbManagerService, 'getListItems');
     form.setValue(stubSearch);
-    tick(201);
+    tick(301);
+    expect(spy).toHaveBeenCalledWith(component.listType, stubSearch);
   }));
 
 });

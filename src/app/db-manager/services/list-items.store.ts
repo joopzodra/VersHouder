@@ -1,8 +1,7 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import { Injectable, Inject } from '@angular/core';
 import {Subject } from 'rxjs/Subject'
-import { PoemsListItem, PoetsListItem, BundlesListItem } from '../../models/list-items';
-type ListItem = PoemsListItem | PoetsListItem | BundlesListItem;
+import { ListItem } from '../../models/list-items';
 
 export const LOAD = 'LOAD'
 export const ADD = 'ADD'

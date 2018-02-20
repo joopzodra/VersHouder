@@ -9,4 +9,5 @@ export class MockDbManagerService {
       this.listItems$.next(this.stubListItems);
   }
 
+  searchingStart(){}
 }

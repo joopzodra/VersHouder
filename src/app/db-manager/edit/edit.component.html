@@ -1,3 +1,38 @@
-<p>
-  edit works!
-</p>
+<div >
+  <div class="w3-container w3-margin">
+
+    <header class="w3-container w3-teal w3-display-container">
+      <span (click)="hideForm()"
+      class="w3-button w3-display-topright w3-xlarge">&times;</span>
+      <h2>Redigeer: {{listType}}</h2>
+    </header>
+
+    <div [ngSwitch]="listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
+      <form [formGroup]="editForm" class="w3-container w3-padding-16">
+
+        <div *ngSwitchCase="'poems'" class="">
+        </div>
+
+        <div *ngSwitchCase="'poets'" class="">
+          <p>
+            <label>Naam*</label>
+            <input class="w3-input w3-border" type="text" formControlName="name">
+          </p>
+          <p>
+            <label>Geboortejaar</label>
+            <input class="w3-input w3-border" type="text" formControlName="born">
+          </p>
+          <p>
+            <label>Sterfjaar</label>
+            <input class="w3-input w3-border" type="text" formControlName="died">
+          </p>          
+        </div>
+
+        <div *ngSwitchCase="'bundles'" class="">
+        </div>        
+
+      </form>
+    </div>
+
+  </div>
+</div>
