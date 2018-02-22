@@ -16,6 +16,7 @@ import { PoemsListComponent } from './db-manager/poems-list/poems-list.component
 import { PoetsListComponent } from './db-manager/poets-list/poets-list.component';
 import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
 import { EditComponent } from './db-manager/edit/edit.component';
+import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
 
 import { DbManagerService } from './db-manager/services/db-manager.service';
 import { ListItemsStore } from './db-manager/services/list-items.store';
@@ -31,6 +32,7 @@ import { ListItemsStore } from './db-manager/services/list-items.store';
     PoetsListComponent,
     BundlesListComponent,
     EditComponent,
+    PoemItemComponent,
   ],
   imports: [
     BrowserModule,

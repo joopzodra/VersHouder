@@ -39,7 +39,7 @@ describe('SearchComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('if the user types values in the search field, it passes these to the DbManagerService\'s getListItems method', fakeAsync(() => {
+  it('when the user enters values in the searchform, it passes these to the DbManagerService\'s getListItems method', fakeAsync(() => {
     component.listType = 'poems';
     const form = component.searchForm;
     const stubSearch = {searchFor: 'poems.text', query: '', maxItemsPerPage: 100 };
@@ -48,5 +48,16 @@ describe('SearchComponent', () => {
     tick(301);
     expect(spy).toHaveBeenCalledWith(component.listType, stubSearch);
   }));
+
+  it('when the value of the input binding \'listType\' changes (because the user navigated to another list), the form is reset', () => {
+    component.listType = 'poems';
+    const form = component.searchForm;
+    const stubSearch = {searchFor: 'poems.text', query: 'hi', maxItemsPerPage: '50' };
+    form.setValue(stubSearch);
+    component.listType = 'bundles';
+    component.ngOnChanges();
+    const defaultBundlesSearch = {searchFor: 'bundles.title', query: '', maxItemsPerPage: '100'};
+    expect(form.value).toEqual(defaultBundlesSearch);
+  });
 
 });

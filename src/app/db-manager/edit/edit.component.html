@@ -1,16 +1,36 @@
-<div >
+<div *ngIf="listItem">
   <div class="w3-container w3-margin">
 
     <header class="w3-container w3-teal w3-display-container">
       <span (click)="hideForm()"
       class="w3-button w3-display-topright w3-xlarge">&times;</span>
-      <h2>Redigeer: {{listType}}</h2>
+      <h2>{{headerInfo[listType]}} {{listItemId ? 'wijzigen' : 'toevoegen'}}</h2>
     </header>
 
-    <div [ngSwitch]="listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
-      <form [formGroup]="editForm" class="w3-container w3-padding-16">
+    <div [ngSwitch]="_listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)" class="w3-container w3-padding-16">
 
         <div *ngSwitchCase="'poems'" class="">
+          <p>
+            <label>Titel</label>
+            <input class="w3-input w3-border" type="text" formControlName="title">
+          </p>
+          <p>
+            <label>Gedicht*</label>
+            <textarea class="w3-input w3-border" rows=10 formControlName="text"></textarea>
+          </p>
+          <p>
+            <label>Commentaar</label>
+            <input class="w3-input w3-border" type="text" formControlName="comment">
+          </p>
+          <p>
+            <label>Dichter</label>
+            <!-- <jr-database-item [type]="'poet'" [item]="entry" (itemChange)="form.value.poet_id = $event" (suggestedItemsLengthChange)="suggestionsLength = $event"></jr-database-item> -->
+          </p>
+          <p>
+            <label>Bundel</label>
+            <!-- <jr-database-item [type]="'bundle'" [item]="entry" (itemChange)="form.value.bundle_id = $event" (suggestedItemsLengthChange)="suggestionsLength = $event"></jr-database-item> -->
+          </p>
         </div>
 
         <div *ngSwitchCase="'poets'" class="">
@@ -29,8 +49,26 @@
         </div>
 
         <div *ngSwitchCase="'bundles'" class="">
-        </div>        
+          <p>
+            <label>Titel*</label>
+            <input class="w3-input w3-border" type="text" formControlName="title">
+          </p>
+          <p>
+            <label>Dichter (of samensteller)</label>
+            <!-- <jr-database-item [type]="'poet'" [item]="entry" (itemChange)="form.value.poet_id = $event" (suggestedItemsLengthChange)="suggestionsLength = $event"></jr-database-item> -->
+          </p>
+          <p>
+            <label>Jaar van publicatie</label>
+            <input class="w3-input w3-border" type="text" formControlName="year">
+          </p>
+        </div>
 
+        <div>    
+          <button class="w3-button w3-blue w3-section" (click)="hideForm()">Annuleren</button>
+        </div>
+        <div>
+          <button class="w3-button w3-blue w3-section" type="submit">Opslaan</button>
+        </div>
       </form>
     </div>
 

@@ -1,28 +1,27 @@
+// The id property exists on all existing listItems, except on the newly created ones. Therefore it's an optional property.
+
 export interface PoemsListItem {
-  id: number,
   text: string,  
+  id?: number,
   bundle_id?: number,
   bundle_title?: string,
   poet_id?: number,
   poet_name?: string,
   title?: string,
-  //userId?: number
 }
 
 export interface PoetsListItem {
-  id: number,
   name: string,
+  id?: number,
   born?: number,
   died?: number,
-  ///userId?: number !!!!!!!!!!!!!!
 }
 
 export interface BundlesListItem {
-  id: number,
   title: string,
+  id?: number,
   year?: number,
   poetId?: number,
-  //userId?: number
 }
 
 export type ListItem = PoemsListItem | PoetsListItem | BundlesListItem;

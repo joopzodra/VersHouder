@@ -6,6 +6,14 @@ import { Observable } from 'rxjs/Observable';
 import { DbManagerService } from '../services/db-manager.service';
 import { ListItemsStore } from '../services/list-items.store';
 import { BundlesListItem } from '../../models/list-items';
+import { EditService } from '../services/edit.service';
+
+/* The BundlesListComponent shows a list with bundles.
+ * It receives the bundles from the ListItemsStore.
+ * (Which bundles it receives, is determined by the SearchComponent.)
+ * It hosts an EditComponent, to which it offers the listType property by an input binding.
+ * It activates the EditComponent by it's editListItem and addListItem methods.
+ */
 
 @Component({
   selector: 'jr-bundles-list',
@@ -16,12 +24,14 @@ export class BundlesListComponent implements OnInit {
 
   listItems$: Observable<BundlesListItem[]>;
   searching$: Observable<boolean>;
+  listType = 'bundles';
 
   constructor(
     private titleService: Title,
     private route: ActivatedRoute,
     private dbManagerService: DbManagerService,
-    private listItemsStore: ListItemsStore
+    private listItemsStore: ListItemsStore,
+    private editService: EditService
   ) { }
 
   ngOnInit() {
@@ -29,6 +39,15 @@ export class BundlesListComponent implements OnInit {
     this.titleService.setTitle(title);
     this.listItems$ = <Observable<BundlesListItem[]>>(this.listItemsStore.listItems$);
     this.searching$ = this.dbManagerService.searching$;
+  }
+
+  editListItem(id: string) {
+    const idNum = +id;
+    this.editService.pushListItemId(idNum);
+  }
+
+  addListItem(){
+    this.editService.pushListItemId(0);
   }
 
 }

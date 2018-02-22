@@ -1,14 +1,21 @@
-<table *ngIf="!(searching$ | async)" class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
-  <tr class="w3-teal">
-    <th>Dichter</th>
-    <th>Titel</th>
-    <th>Beginregels</th>
-  </tr>
-  <tr class="no-list-items-row" *ngIf="entries?.length===0"><td colspan="3">Geen zoekresultaten</td></tr>
-  <tr class="hoverable list-item-row" *ngFor="let row of listItems$ | async" (click)="showDetails(row.id)">
-    <td>{{row.poet_name ? row.poet_name : '–'}}</td>
-    <td>{{row.title ? row.title : '–'}}</td>
-    <td>{{row.text?.split('\n')[0]}}<br>{{row.text?.split('\n')[1]}}</td>
-  </tr>
-</table>
+<div *ngIf="!(searching$ | async)">
+  <div>
+    <button class="w3-button w3-blue w3-section" (click)="addListItem()">+ Nieuw gedicht</button>
+  </div>
+  <table class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
+    <tr class="w3-teal">
+      <th>Dichter</th>
+      <th>Titel</th>
+      <th>Beginregels</th>
+    </tr>
+    <tr class="no-list-items-row" *ngIf="(listItems$ | async).length===0"><td colspan="3">Geen zoekresultaten</td></tr>
+    <tr class="hoverable list-item-row" *ngFor="let row of listItems$ | async" (click)="showPoem(row.id)">
+      <td>{{row.poet_name ? row.poet_name : '–'}}</td>
+      <td>{{row.title ? row.title : '–'}}</td>
+      <td>{{row.text?.split('\n')[0]}}<br>{{row.text?.split('\n')[1]}}</td>
+    </tr>
+  </table>
+</div>
 <div *ngIf="searching$ | async" class="spinner w3-spin"></div>
+<router-outlet></router-outlet>
+<jr-edit [listType]="listType"></jr-edit>

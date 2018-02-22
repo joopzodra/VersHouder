@@ -1,14 +1,20 @@
-<table *ngIf="!(searching$ | async)" class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
-  <tr class="w3-teal">
-    <th>Dichter</th>
-    <th>Geboren</th>
-    <th>Gestorven</th>
-  </tr>
-  <tr *ngIf="entries?.length===0"><td colspan="3">Geen zoekresultaten</td></tr>
-  <tr class="hoverable" *ngFor="let row of listItems$ | async" (click)="editPoet(row.id)">
-    <td>{{row.name ? row.name : '–'}}</td>
-    <td>{{row.born ? row.born : '–'}}</td>
-    <td>{{row.died ? row.died : '–'}}</td>
-  </tr>
-</table>
+<div *ngIf="!(searching$ | async)">
+  <div>
+    <button class="w3-button w3-blue w3-section" (click)="addListItem()">+ Nieuwe dichter</button>
+  </div>
+  <table class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
+    <tr class="w3-teal">
+      <th>Dichter</th>
+      <th>Geboren</th>
+      <th>Gestorven</th>
+    </tr>
+    <tr *ngIf="(listItems$ | async).length===0"><td colspan="3">Geen zoekresultaten</td></tr>
+    <tr class="hoverable list-item-row" *ngFor="let row of listItems$ | async" (click)="editListItem(row.id)">
+      <td>{{row.name ? row.name : '–'}}</td>
+      <td>{{row.born ? row.born : '–'}}</td>
+      <td>{{row.died ? row.died : '–'}}</td>
+    </tr>
+  </table>
+</div>
 <div *ngIf="searching$ | async" class="spinner w3-spin"></div>
+<jr-edit [listType]="listType"></jr-edit>

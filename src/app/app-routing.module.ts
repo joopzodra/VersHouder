@@ -8,6 +8,7 @@ import { PoemsListComponent } from './db-manager/poems-list/poems-list.component
 import { PoetsListComponent } from './db-manager/poets-list/poets-list.component';
 import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
 import { EditComponent } from './db-manager/edit/edit.component';
+import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
 //import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export function loadAuthModule() {
@@ -16,15 +17,17 @@ export function loadAuthModule() {
 
 const appRoutes: Routes = [
   {
-    path: 'db-manager', component: DbManagerComponent,
+    path: 'db-manager', canActivate: [AuthGuard], component: DbManagerComponent,
     children: [
       { path: '', redirectTo: 'poems', pathMatch: 'full' },
-      { path: 'poems', component: PoemsListComponent, canActivate: [AuthGuard], data: { title: 'Gedichten' } },
-      { path: 'poets', component: PoetsListComponent, canActivate: [AuthGuard], data: { title: 'Dichters' } },
-      { path: 'bundles', component: BundlesListComponent, canActivate: [AuthGuard], data: { title: 'Gedichtenbundels' } }
-    ]
-  },
-  { path: 'db-manager/edit', component: EditComponent, canActivate: [AuthGuard], data: { title: 'Onderdeel toevoegen/wijzigen' } },
+      {
+        path: 'poems', component: PoemsListComponent, data: { title: 'Gedichten' }, children: [
+          { path: 'poem/:id', component: PoemItemComponent, data: { title: 'Gedicht' } }
+        ]
+      },
+      { path: 'poets', component: PoetsListComponent, data: { title: 'Dichters' } },
+      { path: 'bundles', component: BundlesListComponent, data: { title: 'Gedichtenbundels' } },
+  ]},
   { path: '', redirectTo: 'db-manager', pathMatch: 'full' },
   //{ path: '**', component: PageNotFoundComponent }
 ];

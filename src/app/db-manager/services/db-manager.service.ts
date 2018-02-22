@@ -30,6 +30,7 @@ export class DbManagerService {
     this.backendUrl = backendUrl;
   }
 
+  // searchingStart is called in the SearchComponent. From there it can call this method before the debounceTime delay.
   searchingStart() {
     this._searching.next(true);
   }
@@ -39,6 +40,7 @@ export class DbManagerService {
   }
 
   getListItems(listType: string, formValue: { query: string, searchFor: string, maxItemsPerPage: string }): void {
+    //console.log(listType, formValue)
     this.listItemsStore.dispatch({ type: LOAD, data: [] });
     const options = {
       params: new HttpParams()
@@ -57,16 +59,17 @@ export class DbManagerService {
       );
   }
 
-  /*  addPoem(poem: Poem) {
-      this.http.post<Poem>(this.backendUrl + '/manager/edit', poem, { headers: this.headers })
-        .subscribe(res => {
-          console.log(res);
-        });
-    }*/
+  editListItem(listType: string, listItem: ListItem) {
+    this.listItemsStore.dispatch({type: EDIT, data: [listItem]})
+    /*      this.http.post<ListItem>(this.backendUrl + '/manager/edit', listItem, { headers: this.headers })
+            .subscribe(res => {
+              console.log(res);
+            });*/
+  }
 
-    editItem(){
+  editItem() {
 
-    }
+  }
 
 
   handleError(err: HttpErrorResponse) {

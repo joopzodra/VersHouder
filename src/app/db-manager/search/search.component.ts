@@ -40,7 +40,7 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
         debounceTime(300)
       )
       .subscribe((formValue: { searchFor: string, query: string, maxItemsPerPage: string }) => {
-        this.dbManagerService.getListItems(this.listType, formValue)
+        this.dbManagerService.getListItems(this.listType, formValue);
       }); // Toevoegen: this.offset, +this.maxListItems);
     this.searchForm.patchValue({ searchFor: this.defaultSearchFor() });
   }

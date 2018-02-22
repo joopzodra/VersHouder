@@ -1,0 +1,22 @@
+<div>
+  <div *ngIf="poemItem$ | async, let poemItem" class="w3-container w3-margin-top">
+
+    <header class="w3-container w3-display-container w3-teal">
+      <h2>{{poemItem.title ? poemItem.title : poemItem.text.split('\\n')[0]}}</h2>
+      <span (click)="hidePoemItem()" class="w3-button w3-display-topright w3-xlarge">&times;</span>
+      <div class="w3-container w3-teal">
+      <button class="w3-button w3-theme-d2 w3-margin-bottom" (click)="editListItem(poemItem.id)">Wijzigen</button>
+      </div>
+    </header>
+
+    <div class="w3-container w3-border-left w3-border-right w3-padding-24">
+      <p class="poem-text" *ngFor="let line of poemItem.text.split('\n')">{{line.trim() === '' ? '&nbsp;' : line}}</p>
+    </div>
+
+    <footer class="w3-container w3-teal">
+      <p>Door: {{poemItem.poet_name}}</p>
+      <p>{{poemItem.bundle_title ? 'Uit: ' + poemItem.bundle_title : ''}}</p>
+    </footer>
+  </div>
+</div>
+<jr-edit [listType]="listType"></jr-edit>
