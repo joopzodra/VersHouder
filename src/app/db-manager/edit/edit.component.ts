@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -17,6 +17,7 @@ import { EditService } from '../services/edit.service';
  * Which formfields the form contains, is determined by the listType input binding.
  * The EditComponent prefills the form with data it receives from the ListItemStore. This data is based on the id of the poem, poet or bundle which the EditComponent receives from the EditService.
  * If the id === 0, it means a new listItem must be added. When the id === 0 no listItem will be filtered out. In this case the EditComponent offer the user a blank form.
+ * If the id === -1, it means the form must be hidden.
  */
 
 @Component({
@@ -28,16 +29,15 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
 
   editForm: FormGroup;
   listItem: ListItem;
-  _listType: string
-  listItemId: number;
   listItemSubscription: Subscription;
-
   headerInfo = {
     'poems': 'Gedicht',
     'poets': 'Dichter',
     'bundles': 'Bundel'
   }
+  askDeleteConfirmationDisplay = 'none';
 
+  _listType: string;
   @Input()
   set listType(listType: string) {
     this._listType = listType;
@@ -46,15 +46,16 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
   get listType(): string {
     return this._listType;
   }
-  
- constructor(
+
+  constructor(
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private fb: FormBuilder,
     private listItemsStore: ListItemsStore,
     private dbManagerService: DbManagerService,
     private location: Location,
-    private editService: EditService
+    private editService: EditService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -64,23 +65,27 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     const id$ = this.editService.listItemId$;
     const listItem$ = this.listItemsStore.listItems$;
     this.listItemSubscription = combineLatest(id$, listItem$).subscribe(([id, listItems]) => {
-      let listItem = listItems.filter(listItem => listItem.id === id)[0];
-      if (!listItem) {
-        listItem = this.newListItem();
+      if (id === -1) {
+        this.hideForm()
+        return;
       }
-      this.editForm.patchValue(listItem);
-      this.listItem = listItem;
+      if (id === 0) {
+        this.listItem = this.newListItem();
+      } else {
+        this.listItem = listItems.filter(listItem => listItem.id === id)[0];
+      }
+      this.editForm.patchValue(this.listItem);
     });
   }
 
   buildForm(fb: FormBuilder) {
-    switch (this._listType) {
+    switch (this.listType) {
       case 'poems':
         this.editForm = fb.group({
           text: [''],
           title: [''],
-          poetId: [],
-          bundleId: [],
+          poet_id: [],
+          bundle_id: [],
           url: [''],
           comment: ['']
         });
@@ -96,33 +101,50 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
         this.editForm = fb.group({
           title: [''],
           year: [],
-          poetId: []
+          poet_id: []
         });
         break;
     }
   }
 
   newListItem(): ListItem {
-    switch (this._listType) {
+    switch (this.listType) {
       case 'poems':
-        return {text: ''}
+        return { text: '' }
       case 'poets':
-        return {name: ''}
+        return { name: '' }
       case 'bundles':
-        return {title: ''}
+        return { title: '' }
     }
   }
 
   onSubmit(formValue: any) {
     const editedItem = Object.assign(this.listItem, formValue);
-    this.dbManagerService.editListItem(this.listType, editedItem);
-    this.listItem = undefined;
+    this.dbManagerService.createOrUpdateListItem(this.listType, editedItem);
+    this.editService.pushListItemId(-1);
   }
 
   hideForm() {
     this.listItem = undefined;
+    this.editForm.reset();
     return false;
   }
+
+  askDeleteConfirmation() {
+    this.askDeleteConfirmationDisplay = 'block';
+    return false;
+  }
+
+  hideDeleteConfirmation() {
+    this.askDeleteConfirmationDisplay = 'none';
+  }
+
+  deleteListItem() {
+    this.dbManagerService.deleteListItem(this.listType, this.listItem);
+    this.editService.pushListItemId(-1);
+    return false;
+  }
+
 
   ngOnDestroy() {
     this.listItemSubscription.unsubscribe();

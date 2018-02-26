@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { BACKEND_URL, URL } from '../../app-tokens';
-import { Poem, Poet, Bundle } from '../../models/poem-poet-bundle';
 import { ListItem } from '../../models/list-items';
 import { ListItemsStore, LOAD, ADD, EDIT, REMOVE } from './list-items.store';
 
@@ -30,7 +29,7 @@ export class DbManagerService {
     this.backendUrl = backendUrl;
   }
 
-  // searchingStart is called in the SearchComponent. From there it can call this method before the debounceTime delay.
+  // searchingStart is called in the SearchComponent. From there it can call this method before the debounceTime delay, so the user will see the spinner immediately (not waiting untill the debounceTime delay has finished).
   searchingStart() {
     this._searching.next(true);
   }
@@ -47,30 +46,55 @@ export class DbManagerService {
         .set('queryString', formValue.query.trim())
         .set('table', listType)
         .set('column', formValue.searchFor)
-        .set('maxItems', formValue.maxItemsPerPage)
+        .set('maxItems', formValue.maxItemsPerPage),
+      headers: this.headers
     }
     this.http.get<ListItem[]>(this.backendUrl + '/manager/find-all', options)
-      .subscribe(
-        listItems => {
-          this.listItemsStore.dispatch({ type: LOAD, data: listItems });
-          this.searchingEnd();
-        },
+      .subscribe(listItems => {
+        this.listItemsStore.dispatch({ type: LOAD, data: listItems });
+        this.searchingEnd();
+      },
         this.handleError
       );
   }
 
-  editListItem(listType: string, listItem: ListItem) {
-    this.listItemsStore.dispatch({type: EDIT, data: [listItem]})
-    /*      this.http.post<ListItem>(this.backendUrl + '/manager/edit', listItem, { headers: this.headers })
-            .subscribe(res => {
-              console.log(res);
-            });*/
+  createOrUpdateListItem(listType: string, listItem: ListItem) {
+    const options = {
+      headers: this.headers,
+      params: new HttpParams()
+        .set('table', listType)
+    };
+    if (!listItem.id) {
+      this.http.post<ListItem>(this.backendUrl + '/manager/create', listItem, options)
+        .subscribe(res => {
+          this.listItemsStore.dispatch({ type: ADD, data: [res] });
+        },
+          this.handleError
+        );
+    } else {
+      this.http.put<ListItem>(this.backendUrl + '/manager/update', listItem, options)
+        .subscribe(() => {
+          this.listItemsStore.dispatch({ type: EDIT, data: [listItem] });
+        },
+          this.handleError
+        );
+    }
   }
 
-  editItem() {
-
+  deleteListItem(listType: string, listItem: ListItem) {
+    const options = {
+      headers: this.headers,
+      params: new HttpParams()
+        .set('table', listType)
+        .set('id', listItem.id.toString())
+    }
+    this.http.delete(this.backendUrl + '/manager/delete', options)
+      .subscribe(() => {
+        this.listItemsStore.dispatch({ type: REMOVE, data: [listItem] });
+      },
+        this.handleError
+      );
   }
-
 
   handleError(err: HttpErrorResponse) {
     console.log(err); // TO DO proper error handling

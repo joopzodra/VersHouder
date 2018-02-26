@@ -4,7 +4,7 @@
     <header class="w3-container w3-teal w3-display-container">
       <span (click)="hideForm()"
       class="w3-button w3-display-topright w3-xlarge">&times;</span>
-      <h2>{{headerInfo[listType]}} {{listItemId ? 'wijzigen' : 'toevoegen'}}</h2>
+      <h2>{{headerInfo[listType]}} {{listItem.id ? 'wijzigen' : 'toevoegen'}}</h2>
     </header>
 
     <div [ngSwitch]="_listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
@@ -40,11 +40,11 @@
           </p>
           <p>
             <label>Geboortejaar</label>
-            <input class="w3-input w3-border" type="text" formControlName="born">
+            <input class="w3-input w3-border" type="number" formControlName="born">
           </p>
           <p>
             <label>Sterfjaar</label>
-            <input class="w3-input w3-border" type="text" formControlName="died">
+            <input class="w3-input w3-border" type="number" formControlName="died">
           </p>          
         </div>
 
@@ -59,7 +59,7 @@
           </p>
           <p>
             <label>Jaar van publicatie</label>
-            <input class="w3-input w3-border" type="text" formControlName="year">
+            <input class="w3-input w3-border" type="number" formControlName="year">
           </p>
         </div>
 
@@ -69,8 +69,25 @@
         <div>
           <button class="w3-button w3-blue w3-section" type="submit">Opslaan</button>
         </div>
+        <div>
+          <button class="w3-button w3-red w3-section" (click)="askDeleteConfirmation()">{{headerInfo[listType]}} verwijderen</button>
+        </div>
       </form>
     </div>
 
   </div>
+
+  <div [ngStyle]="{'display': askDeleteConfirmationDisplay }" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <h3>{{headerInfo[listType]}} verwijderen?</h3>
+        <p *ngIf="listItem.title">Titel: {{listItem.title}}</p>
+        <p *ngIf="listItem.name">Naam: {{listItem.name}}</p>
+        <p *ngIf="listItem.text">Beginregel: {{listItem.text.split('\n')[0]}}</p>
+        <button class="w3-button w3-blue w3-section" (click)="hideDeleteConfirmation()">Annuleren</button>
+        <button class="w3-button w3-red w3-section" (click)="deleteListItem()">Verwijderen</button>
+      </div>
+    </div>
+  </div>
+
 </div>
