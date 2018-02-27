@@ -85,8 +85,11 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
           text: [''],
           title: [''],
           poet_id: [],
+          poet_name: [''],
           bundle_id: [],
+          bundle_title: [''],
           url: [''],
+          url_label: [''],
           comment: ['']
         });
         break;
@@ -119,7 +122,7 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     }
   }
 
-  onSubmit(formValue: any) {
+  onSubmit(formValue: any) { console.log(this.listItem, formValue)
     const editedItem = Object.assign(this.listItem, formValue);
     this.dbManagerService.createOrUpdateListItem(this.listType, editedItem);
     this.editService.pushListItemId(-1);

@@ -13,8 +13,13 @@
       <p class="poem-text" *ngFor="let line of poemItem.text.split('\n')">{{line.trim() === '' ? '&nbsp;' : line}}</p>
     </div>
 
+    <div class="w3-container w3-border-left w3-border-right w3-padding-24">
+      <p class="source-url">Bron: <a href="poemItem.url">{{poemItem.url_label || poemItem.url}}</a><span *ngIf="!poemItem.url">–</span></p>
+      <p class="poem-comment">Toelichting: {{poemItem.comment ? poemItem.comment : '–'}}</p>
+    </div>
+
     <footer class="w3-container w3-teal">
-      <p>Door: {{poemItem.poet_name}}</p>
+      <p>Door: {{poemItem.poet_name ? poemItem.poet_name : '–'}}</p>
       <p>{{poemItem.bundle_title ? 'Uit: ' + poemItem.bundle_title : ''}}</p>
     </footer>
   </div>

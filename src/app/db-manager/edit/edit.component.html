@@ -21,7 +21,7 @@
           </p>
           <p>
             <label>Commentaar</label>
-            <input class="w3-input w3-border" type="text" formControlName="comment">
+            <textarea class="w3-input w3-border" rows=6 formControlName="comment"></textarea>
           </p>
           <p>
             <label>Dichter</label>
@@ -30,6 +30,14 @@
           <p>
             <label>Bundel</label>
             <jr-foreign-key-search [foreignKeyType]="'bundles'" [foreignKey]="listItem.bundle_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
+          </p>
+          <p>
+            <label>Bron, hyperlink-URL</label>
+            <input class="w3-input w3-border" type="text" formControlName="url">
+          </p>
+          <p>
+            <label>Bron, hyperlink-tekstlabel</label>
+            <input class="w3-input w3-border" type="text" formControlName="url_label">
           </p>
         </div>
 
