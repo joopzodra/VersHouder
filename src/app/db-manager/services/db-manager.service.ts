@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { BACKEND_URL, URL } from '../../app-tokens';
 import { ListItem } from '../../models/list-items';
 import { ListItemsStore, LOAD, ADD, EDIT, REMOVE } from './list-items.store';
+import { Poet, Bundle } from '../../models/foreign-key-children';
 
 /* The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
  * The service receives queries from the SearchComponent.
@@ -39,7 +40,6 @@ export class DbManagerService {
   }
 
   getListItems(listType: string, formValue: { query: string, searchFor: string, maxItemsPerPage: string }): void {
-    //console.log(listType, formValue)
     this.listItemsStore.dispatch({ type: LOAD, data: [] });
     const options = {
       params: new HttpParams()
@@ -99,4 +99,25 @@ export class DbManagerService {
   handleError(err: HttpErrorResponse) {
     console.log(err); // TO DO proper error handling
   }
+
+  queryChildren(foreignKeyType: string, query: string) {
+    const options = {
+      params: new HttpParams()
+        .set('queryString', query)
+        .set('table', foreignKeyType),
+      headers: this.headers
+    }
+    return this.http.get<Poet[] | Bundle[]>(this.backendUrl + '/manager/find-children', options);
+  }
+
+  findChildById(foreignKeyType: string, id: number) {
+    const options = {
+      params: new HttpParams()
+        .set('id', id.toString())
+        .set('table', foreignKeyType),
+      headers: this.headers
+    }
+    return this.http.get<Poet | Bundle>(this.backendUrl + '/manager/find-by-id', options);
+  }
+
 }

@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing'
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ListItemsStore, LOAD } from '../services/list-items.store';
 import { EditComponent } from './edit.component';
@@ -40,7 +41,8 @@ describe('EditComponent', () => {
         { provide: DbManagerService, useClass: MockDbManagerService },
         ListItemsStore,
         EditService
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   }));
 

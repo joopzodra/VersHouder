@@ -26,6 +26,7 @@ export interface BundlesListItem {
   id?: number,
   year?: number,
   poet_id?: number,
+  poet_name?: string
 }
 
 export type ListItem = PoemsListItem | PoetsListItem | BundlesListItem;

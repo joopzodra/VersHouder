@@ -4,13 +4,13 @@ import { Title } from '@angular/platform-browser';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
-import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ListItem, PoemsListItem, PoetsListItem, BundlesListItem } from '../../models/list-items';
 import { ListItemsStore } from '../services/list-items.store';
 import { DbManagerService } from '../services/db-manager.service';
 import { EditService } from '../services/edit.service';
+import { Poet, Bundle } from '../../models/foreign-key-children';
 
 /* The EditComponent offers the user a form to edit a poem, poet or bundle, or to create a new one.
  * The EditComponent is hosted by the PoemItemComponent, PoetsListComponent and BundlesComponent.
@@ -101,7 +101,8 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
         this.editForm = fb.group({
           title: [''],
           year: [],
-          poet_id: []
+          poet_id: [],
+          poet_name: []
         });
         break;
     }
@@ -145,6 +146,22 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     return false;
   }
 
+  onForeignKeyChange(event: Poet | Bundle ) {
+    function isTypePoet(value: Poet | Bundle): value is Poet {
+      return value.hasOwnProperty('name')
+    }
+    if (isTypePoet(event)){
+      this.editForm.patchValue({
+        poet_id: event.id,
+        poet_name: event.name
+      })
+    } else {
+      this.editForm.patchValue({
+        bundle_id: event.id,
+        bundle_title: event.title
+      })
+    }    
+  }
 
   ngOnDestroy() {
     this.listItemSubscription.unsubscribe();
