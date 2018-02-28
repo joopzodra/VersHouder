@@ -122,7 +122,7 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     }
   }
 
-  onSubmit(formValue: any) { console.log(this.listItem, formValue)
+  onSubmit(formValue: any) {
     const editedItem = Object.assign(this.listItem, formValue);
     this.dbManagerService.createOrUpdateListItem(this.listType, editedItem);
     this.editService.pushListItemId(-1);

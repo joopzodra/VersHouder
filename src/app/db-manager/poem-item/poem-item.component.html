@@ -14,7 +14,7 @@
     </div>
 
     <div class="w3-container w3-border-left w3-border-right w3-padding-24">
-      <p class="source-url">Bron: <a href="poemItem.url">{{poemItem.url_label || poemItem.url}}</a><span *ngIf="!poemItem.url">–</span></p>
+      <p class="source-url">Bron: <a [href]="poemItem.url">{{poemItem.url_label || poemItem.url}}</a><span *ngIf="!poemItem.url">–</span></p>
       <p class="poem-comment">Toelichting: {{poemItem.comment ? poemItem.comment : '–'}}</p>
     </div>
 
