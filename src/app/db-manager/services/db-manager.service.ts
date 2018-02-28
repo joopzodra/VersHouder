@@ -100,6 +100,26 @@ export class DbManagerService {
     console.log(err); // TO DO proper error handling
   }
 
+/*HttpErrorResponse {headers: HttpHeaders, status: 400, statusText: "Bad Request", url: "http://localhost:8000/gedichtenDb/manager/create?table=poems", ok: false, …}
+error: "Invalid data from user"
+headers: HttpHeaders {normalizedNames: Map(0), lazyUpdate: null, lazyInit: ƒ}
+message: "Http failure response for http://localhost:8000/gedichtenDb/manager/create?table=poems: 400 Bad Request"
+name: "HttpErrorResponse"
+ok: false
+status:400
+statusText: "Bad Request"
+ */
+/*
+HttpErrorResponse {headers: HttpHeaders, status: 500, statusText: "Internal Server Error", url: "http://localhost:8000/gedichtenDb/manager/create?table=poems", ok: false, …}
+error: "Er is helaas een probleem met de server. Probeer het later opnieuw."
+headers: HttpHeaders {normalizedNames: Map(0), lazyUpdate: null, lazyInit: ƒ}
+message: "Http failure response for http://localhost:8000/gedichtenDb/manager/create?table=poems: 500 Internal Server Error"
+name: "HttpErrorResponse"
+ok: false
+status: 500
+statusText: "Internal Server Error"
+*/
+
   queryChildren(foreignKeyType: string, query: string) {
     const options = {
       params: new HttpParams()

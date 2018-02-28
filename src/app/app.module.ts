@@ -21,6 +21,7 @@ import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
 import { DbManagerService } from './db-manager/services/db-manager.service';
 import { ListItemsStore } from './db-manager/services/list-items.store';
 import { ForeignKeySearchComponent } from './db-manager/foreign-key-search/foreign-key-search.component';
+import { ShowErrorComponent } from './db-manager/show-error/show-error.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ForeignKeySearchComponent } from './db-manager/foreign-key-search/forei
     EditComponent,
     PoemItemComponent,
     ForeignKeySearchComponent,
+    ShowErrorComponent,
   ],
   imports: [
     BrowserModule,

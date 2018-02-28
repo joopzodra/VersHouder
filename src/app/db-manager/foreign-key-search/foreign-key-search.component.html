@@ -1,6 +1,6 @@
 <div>
   <form *ngIf="!dbError" [formGroup]="searchChildForm" (ngSubmit)="onSubmit(searchChild.value)">
-    <input *ngIf='!selectedChild' class="w3-input w3-border" type="text" formControlName="query">
+    <input *ngIf='!selectedChild' class="w3-input w3-border" type="text" formControlName="query" placeholder="niet verplicht">
   </form>
 
   <ul *ngIf='selectedChild' class="w3-ul">

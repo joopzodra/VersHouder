@@ -13,15 +13,16 @@
         <div *ngSwitchCase="'poems'" class="">
           <p>
             <label>Titel</label>
-            <input class="w3-input w3-border" type="text" formControlName="title">
+            <input class="w3-input w3-border" type="text" formControlName="title" placeholder="niet verplicht">
           </p>
           <p>
             <label>Gedicht*</label>
-            <textarea class="w3-input w3-border" rows=10 formControlName="text"></textarea>
+            <textarea class="w3-input w3-border" rows=12 formControlName="text" placeholder="verplicht, maximale lengte 30.000 tekens"></textarea>
           </p>
+          <jr-show-error text="Gedicht" path="text"></jr-show-error>
           <p>
             <label>Commentaar</label>
-            <textarea class="w3-input w3-border" rows=6 formControlName="comment"></textarea>
+            <textarea class="w3-input w3-border" rows=4 formControlName="comment" placeholder="niet verplicht"></textarea>
           </p>
           <p>
             <label>Dichter</label>
@@ -33,26 +34,31 @@
           </p>
           <p>
             <label>Bron, hyperlink-URL</label>
-            <input class="w3-input w3-border" type="text" formControlName="url">
+            <input class="w3-input w3-border" type="text" formControlName="url" placeholder="niet verplicht, begin met 'http://' of 'https://'">
           </p>
+          <jr-show-error text="Hyperlink-URL" path="url"></jr-show-error>
           <p>
             <label>Bron, hyperlink-tekstlabel</label>
-            <input class="w3-input w3-border" type="text" formControlName="url_label">
+            <input class="w3-input w3-border" type="text" formControlName="url_label" placeholder="niet verplicht">
           </p>
+          <div *ngIf="editForm.get('url_label').value !== '' && editForm.hasError('invalidUrlLabel')" class="w3-panel w3-yellow">
+            Vul een geldige hyperlink-URL in.                         
+          </div>
         </div>
 
         <div *ngSwitchCase="'poets'" class="">
           <p>
             <label>Naam*</label>
-            <input class="w3-input w3-border" type="text" formControlName="name">
+            <input class="w3-input w3-border" type="text" formControlName="name" placeholder="verplicht">
           </p>
+          <jr-show-error text="Naam" path="name"></jr-show-error>
           <p>
             <label>Geboortejaar</label>
-            <input class="w3-input w3-border" type="number" formControlName="born">
+            <input class="w3-input w3-border" type="number" formControlName="born" placeholder="niet verplicht">
           </p>
           <p>
             <label>Sterfjaar</label>
-            <input class="w3-input w3-border" type="number" formControlName="died">
+            <input class="w3-input w3-border" type="number" formControlName="died" placeholder="niet verplicht">
           </p>          
         </div>
 
@@ -61,6 +67,7 @@
             <label>Titel*</label>
             <input class="w3-input w3-border" type="text" formControlName="title">
           </p>
+          <jr-show-error text="Titel" path="title"></jr-show-error>
           <p>
             <label>Dichter (of samensteller)</label>
             <jr-foreign-key-search [foreignKeyType]="'poets'" [foreignKey]="listItem.poet_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
@@ -75,7 +82,7 @@
           <button class="w3-button w3-blue w3-section" (click)="hideForm()">Annuleren</button>
         </div>
         <div>
-          <button class="w3-button w3-blue w3-section" type="submit">Opslaan</button>
+          <button class="w3-button w3-blue w3-section" type="submit" [disabled]="editForm.invalid">Opslaan</button>
         </div>
         <div>
           <button class="w3-button w3-red w3-section" (click)="askDeleteConfirmation()">{{headerInfo[listType]}} verwijderen</button>

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -11,6 +11,7 @@ import { ListItemsStore } from '../services/list-items.store';
 import { DbManagerService } from '../services/db-manager.service';
 import { EditService } from '../services/edit.service';
 import { Poet, Bundle } from '../../models/foreign-key-children';
+import { urlValidator, urlLabelValidator } from '../../app-validators';
 
 /* The EditComponent offers the user a form to edit a poem, poet or bundle, or to create a new one.
  * The EditComponent is hosted by the PoemItemComponent, PoetsListComponent and BundlesComponent.
@@ -82,30 +83,32 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     switch (this.listType) {
       case 'poems':
         this.editForm = fb.group({
-          text: [''],
-          title: [''],
-          poet_id: [],
-          poet_name: [''],
-          bundle_id: [],
-          bundle_title: [''],
-          url: [''],
-          url_label: [''],
-          comment: ['']
-        });
+          text: ['', [Validators.maxLength(30000), Validators.required]],
+          title: '',
+          poet_id: '',
+          poet_name: '',
+          bundle_id: '',
+          bundle_title: '',
+          url: ['', urlValidator],
+          url_label: '',
+          comment: ''
+        },
+          { validator: urlLabelValidator }
+        );
         break;
       case 'poets':
         this.editForm = fb.group({
-          name: [''],
-          born: [],
-          died: []
+          name: ['', Validators.required],
+          born: '',
+          died: ''
         });
         break;
       case 'bundles':
         this.editForm = fb.group({
-          title: [''],
-          year: [],
-          poet_id: [],
-          poet_name: []
+          title: ['', Validators.required],
+          year: '',
+          poet_id: '',
+          poet_name: ''
         });
         break;
     }
@@ -149,11 +152,11 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     return false;
   }
 
-  onForeignKeyChange(event: Poet | Bundle ) {
+  onForeignKeyChange(event: Poet | Bundle) {
     function isTypePoet(value: Poet | Bundle): value is Poet {
       return value.hasOwnProperty('name')
     }
-    if (isTypePoet(event)){
+    if (isTypePoet(event)) {
       this.editForm.patchValue({
         poet_id: event.id,
         poet_name: event.name
@@ -163,7 +166,7 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
         bundle_id: event.id,
         bundle_title: event.title
       })
-    }    
+    }
   }
 
   ngOnDestroy() {
