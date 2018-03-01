@@ -23,6 +23,7 @@ export class PoetsListComponent implements OnInit {
 
   listItems$: Observable<PoetsListItem[]>;
   searching$: Observable<boolean>;
+  remoteError$: Observable<number>
   listType = 'poets';
 
   constructor(
@@ -38,6 +39,7 @@ export class PoetsListComponent implements OnInit {
     this.titleService.setTitle(title);
     this.listItems$ = <Observable<PoetsListItem[]>>(this.listItemsStore.listItems$);
     this.searching$ = this.dbManagerService.searching$;
+    this.remoteError$ = this.dbManagerService.remoteError$;
   }
 
   editListItem(id: string) {

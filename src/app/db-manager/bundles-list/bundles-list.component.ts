@@ -24,6 +24,7 @@ export class BundlesListComponent implements OnInit {
 
   listItems$: Observable<BundlesListItem[]>;
   searching$: Observable<boolean>;
+  remoteError$: Observable<number>
   listType = 'bundles';
 
   constructor(
@@ -39,6 +40,7 @@ export class BundlesListComponent implements OnInit {
     this.titleService.setTitle(title);
     this.listItems$ = <Observable<BundlesListItem[]>>(this.listItemsStore.listItems$);
     this.searching$ = this.dbManagerService.searching$;
+    this.remoteError$ = this.dbManagerService.remoteError$;
   }
 
   editListItem(id: string) {

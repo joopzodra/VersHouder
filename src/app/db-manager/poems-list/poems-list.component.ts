@@ -23,6 +23,9 @@ export class PoemsListComponent implements OnInit {
 
   listItems$: Observable<PoemsListItem[]>;
   searching$: Observable<boolean>;
+  remoteError$: Observable<number>
+  searching: boolean;
+  remoteError: number;
   listType = 'poems';
 
   constructor(
@@ -39,6 +42,7 @@ export class PoemsListComponent implements OnInit {
     this.titleService.setTitle(title);
     this.listItems$ = <Observable<PoemsListItem[]>>this.listItemsStore.listItems$;
     this.searching$ = this.dbManagerService.searching$;
+    this.remoteError$ = this.dbManagerService.remoteError$;
   }
 
   showPoem(id: string) {

@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { tap, catchError, map } from 'rxjs/operators';
 
 import { BACKEND_URL, URL } from '../../app-tokens';
 import { ListItem } from '../../models/list-items';
@@ -21,6 +22,8 @@ export class DbManagerService {
   private backendUrl: string;
   private _searching = new BehaviorSubject<boolean>(false);
   public readonly searching$ = this._searching.asObservable();
+  private _remoteError = new BehaviorSubject<number>(undefined);
+  public readonly remoteError$ = this._remoteError.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -40,6 +43,7 @@ export class DbManagerService {
   }
 
   getListItems(listType: string, formValue: { query: string, searchFor: string, maxItemsPerPage: string }): void {
+    this._remoteError.next(undefined);
     this.listItemsStore.dispatch({ type: LOAD, data: [] });
     const options = {
       params: new HttpParams()
@@ -50,75 +54,70 @@ export class DbManagerService {
       headers: this.headers
     }
     this.http.get<ListItem[]>(this.backendUrl + '/manager/find-all', options)
-      .subscribe(listItems => {
-        this.listItemsStore.dispatch({ type: LOAD, data: listItems });
-        this.searchingEnd();
-      },
-        this.handleError
+      .subscribe(
+        listItems => {
+          this.listItemsStore.dispatch({ type: LOAD, data: listItems });
+          this.searchingEnd();
+        },
+        error => this.handleError(error)
       );
   }
 
-  createOrUpdateListItem(listType: string, listItem: ListItem) {
+  createOrUpdateListItem(listType: string, listItem: ListItem): Observable<boolean> {
     const options = {
       headers: this.headers,
       params: new HttpParams()
         .set('table', listType)
     };
     if (!listItem.id) {
-      this.http.post<ListItem>(this.backendUrl + '/manager/create', listItem, options)
-        .subscribe(res => {
-          this.listItemsStore.dispatch({ type: ADD, data: [res] });
-        },
-          this.handleError
-        );
+      return this.http.post<ListItem>(this.backendUrl + '/manager/create', listItem, options)
+        .pipe(
+          tap(res => this.listItemsStore.dispatch({ type: ADD, data: [res] })),
+          map(() => true),
+          catchError(error => {
+            console.log(error);
+            return Observable.of(false);
+          })
+        )
     } else {
-      this.http.put<ListItem>(this.backendUrl + '/manager/update', listItem, options)
-        .subscribe(() => {
-          this.listItemsStore.dispatch({ type: EDIT, data: [listItem] });
-        },
-          this.handleError
+      return this.http.put<ListItem>(this.backendUrl + '/manager/update', listItem, options)
+        .pipe(
+          tap(res => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
+          map(() => true),
+          catchError(error => {
+            console.log(error);
+            return Observable.of(false);
+          })
         );
     }
   }
 
-  deleteListItem(listType: string, listItem: ListItem) {
+  deleteListItem(listType: string, listItem: ListItem): Observable<boolean> {
     const options = {
       headers: this.headers,
       params: new HttpParams()
         .set('table', listType)
         .set('id', listItem.id.toString())
     }
-    this.http.delete(this.backendUrl + '/manager/delete', options)
-      .subscribe(() => {
-        this.listItemsStore.dispatch({ type: REMOVE, data: [listItem] });
-      },
-        this.handleError
+    return this.http.delete(this.backendUrl + '/manager/delete', options)
+      .pipe(
+        tap(res => this.listItemsStore.dispatch({ type: REMOVE, data: [listItem] })),
+        map(() => true),
+        catchError(error => {
+          console.log(error);
+          return Observable.of(false);
+        })
       );
   }
 
-  handleError(err: HttpErrorResponse) {
-    console.log(err); // TO DO proper error handling
+  handleError(error: HttpErrorResponse) {
+    // If error.status === 400 the user has sent invalid data.
+    // If error.status === 500 it's a remote error, not further specified.
+    // If error.status === 0 it's an unknown error, indicating no connection at all by whatever cause. In this case we push 1, because the subscribers treat 0 as undefined.
+    this._remoteError.next(error.status === 0 ? 1 : error.status);
+    this.searchingEnd();
+    console.log(error);
   }
-
-/*HttpErrorResponse {headers: HttpHeaders, status: 400, statusText: "Bad Request", url: "http://localhost:8000/gedichtenDb/manager/create?table=poems", ok: false, …}
-error: "Invalid data from user"
-headers: HttpHeaders {normalizedNames: Map(0), lazyUpdate: null, lazyInit: ƒ}
-message: "Http failure response for http://localhost:8000/gedichtenDb/manager/create?table=poems: 400 Bad Request"
-name: "HttpErrorResponse"
-ok: false
-status:400
-statusText: "Bad Request"
- */
-/*
-HttpErrorResponse {headers: HttpHeaders, status: 500, statusText: "Internal Server Error", url: "http://localhost:8000/gedichtenDb/manager/create?table=poems", ok: false, …}
-error: "Er is helaas een probleem met de server. Probeer het later opnieuw."
-headers: HttpHeaders {normalizedNames: Map(0), lazyUpdate: null, lazyInit: ƒ}
-message: "Http failure response for http://localhost:8000/gedichtenDb/manager/create?table=poems: 500 Internal Server Error"
-name: "HttpErrorResponse"
-ok: false
-status: 500
-statusText: "Internal Server Error"
-*/
 
   queryChildren(foreignKeyType: string, query: string) {
     const options = {

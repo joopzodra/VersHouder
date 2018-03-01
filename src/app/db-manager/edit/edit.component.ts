@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Observable } from 'rxjs/Observable';
 
 import { ListItem, PoemsListItem, PoetsListItem, BundlesListItem } from '../../models/list-items';
 import { ListItemsStore } from '../services/list-items.store';
@@ -18,7 +19,7 @@ import { urlValidator, urlLabelValidator } from '../../app-validators';
  * Which formfields the form contains, is determined by the listType input binding.
  * The EditComponent prefills the form with data it receives from the ListItemStore. This data is based on the id of the poem, poet or bundle which the EditComponent receives from the EditService.
  * If the id === 0, it means a new listItem must be added. When the id === 0 no listItem will be filtered out. In this case the EditComponent offer the user a blank form.
- * If the id === -1, it means the form must be hidden.
+ * If the id === -1, it means the form must be hidden. The id === -1 is triggered by the EditComponent itself, by its onSubmit method.
  */
 
 @Component({
@@ -26,7 +27,7 @@ import { urlValidator, urlLabelValidator } from '../../app-validators';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent /*implements OnInit, OnDestroy*/ {
+export class EditComponent implements OnInit, OnDestroy {
 
   editForm: FormGroup;
   listItem: ListItem;
@@ -37,6 +38,7 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     'bundles': 'Bundel'
   }
   askDeleteConfirmationDisplay = 'none';
+  remoteError = false;
 
   _listType: string;
   @Input()
@@ -64,8 +66,8 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     this.titleService.setTitle(title);
 
     const id$ = this.editService.listItemId$;
-    const listItem$ = this.listItemsStore.listItems$;
-    this.listItemSubscription = combineLatest(id$, listItem$).subscribe(([id, listItems]) => {
+    const listItems$ = this.listItemsStore.listItems$;
+    this.listItemSubscription = combineLatest(id$, listItems$).subscribe(([id, listItems]) => {
       if (id === -1) {
         this.hideForm()
         return;
@@ -115,6 +117,7 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
   }
 
   newListItem(): ListItem {
+    // Returns an empty listItem
     switch (this.listType) {
       case 'poems':
         return { text: '' }
@@ -127,8 +130,18 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
 
   onSubmit(formValue: any) {
     const editedItem = Object.assign(this.listItem, formValue);
-    this.dbManagerService.createOrUpdateListItem(this.listType, editedItem);
-    this.editService.pushListItemId(-1);
+    this.dbManagerService.createOrUpdateListItem(this.listType, editedItem)
+      .subscribe(succes => {
+        if (succes) {
+          this.editService.pushListItemId(-1);
+        } else {
+          this.remoteError = true;
+        }
+      });
+  }
+
+  hideRemoteErrorMessage() {
+    this.remoteError = false;
   }
 
   hideForm() {
@@ -147,11 +160,18 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
   }
 
   deleteListItem() {
-    this.dbManagerService.deleteListItem(this.listType, this.listItem);
-    this.editService.pushListItemId(-1);
+    this.dbManagerService.deleteListItem(this.listType, this.listItem)
+      .subscribe(succes => {
+        if (succes) {
+          this.editService.pushListItemId(-1);
+        } else {
+          this.remoteError = true;
+        }
+      });
     return false;
   }
 
+  // onForeignKeyChange is triggered by the ForeignKeySearch child components.
   onForeignKeyChange(event: Poet | Bundle) {
     function isTypePoet(value: Poet | Bundle): value is Poet {
       return value.hasOwnProperty('name')
@@ -173,5 +193,3 @@ export class EditComponent /*implements OnInit, OnDestroy*/ {
     this.listItemSubscription.unsubscribe();
   }
 }
-
-
