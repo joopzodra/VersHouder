@@ -1,4 +1,5 @@
 import { AbstractControl } from '@angular/forms';
+declare var require: (filename: string) => any;
 const validUrl = require('valid-url');
 
 export function urlValidator(control: AbstractControl): { [key: string]: any } {
