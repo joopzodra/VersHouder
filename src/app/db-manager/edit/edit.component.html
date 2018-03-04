@@ -58,10 +58,12 @@
             <p>
               <label>Geboortejaar</label>
               <input class="w3-input w3-border" type="number" formControlName="born" placeholder="niet verplicht">
+              <jr-show-error text="Geboortejaar" path="born"></jr-show-error>
             </p>
             <p>
               <label>Sterfjaar</label>
               <input class="w3-input w3-border" type="number" formControlName="died" placeholder="niet verplicht">
+              <jr-show-error text="Sterfjaar" path="died"></jr-show-error>
             </p>          
           </div>
 

@@ -37,19 +37,17 @@ export class ShowErrorComponent {
           case 'required':
             message = `${this.displayName} is niet ingevuld.`;
             break;
-          case 'minlength':
-            message = `${this.displayName} moet minstens ${error.requiredLength} tekens bevatten.`;
-            break;
           case 'maxlength':
             message = `${this.displayName} mag maximaal ${error.requiredLength} tekens bevatten. (Bevat nu ${error.actualLength} tekens.)`;
             break;
-/*          case 'pattern':
-            if (this.controlPath === 'url') {
-              message = `${this.displayName} moet beginnen met 'http://' of 'https://'.`
+          case 'pattern':
+            if (this.controlPath === 'born' || this.controlPath === 'died') {
+              message = `${this.displayName} moet uit vier cijfers bestaan.`;
             } else {
-              message = `${this.displayName} mag geen spaties bevatten.`
+              message = ''; // Currently no else cases. Keeping if-else just for the case we once may need it some day.
+              //message = `${this.displayName} mag geen spaties bevatten.`
             }
-            break;*/
+            break;
           case 'invalidUrl':
             message = `${this.displayName} moet een geldige URL bevatten.`;
             break;
