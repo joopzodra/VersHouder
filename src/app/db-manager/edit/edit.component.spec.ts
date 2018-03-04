@@ -6,6 +6,7 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { ListItemsStore, LOAD } from '../services/list-items.store';
 import { EditComponent } from './edit.component';
@@ -24,6 +25,7 @@ class TestHostComponent {
 
 describe('EditComponent', () => {
   let hostComponent: TestHostComponent;
+  let editComponent: EditComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   let el: HTMLElement;
   let de: DebugElement;
@@ -49,6 +51,7 @@ describe('EditComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     hostComponent = fixture.componentInstance;
+    editComponent = hostComponent.editComponent;
     el = fixture.nativeElement;
     de = fixture.debugElement;
     dbManagerService = TestBed.get(DbManagerService);
@@ -57,12 +60,15 @@ describe('EditComponent', () => {
     fixture.detectChanges();
   });
 
+  beforeEach(() => {
+    listItemsStore.dispatch({ type: LOAD, data: stubListItems });
+  });
+
   it('should create', () => {
     expect(hostComponent.editComponent).toBeTruthy();
   });
 
   it('which form it displays is determined by the listType input binding ', () => {
-    const editComponent = hostComponent.editComponent;
     hostComponent.listType = 'poems';
     editComponent.listItem = { id: 1, text: 'poem1' }; // If listItem is undefinded, the form is not displayed.
     fixture.detectChanges();
@@ -78,10 +84,8 @@ describe('EditComponent', () => {
   });
 
   it('displays empty formfields if the listitem id it receives from the EditService is 0', async(() => {
-    const editComponent = hostComponent.editComponent;
     hostComponent.listType = 'poems';
     fixture.detectChanges();
-    listItemsStore.dispatch({ type: LOAD, data: stubListItems });
     editService.listItemId$.subscribe(() => {
       fixture.detectChanges();
       const firstInput = el.querySelector('input');
@@ -93,10 +97,8 @@ describe('EditComponent', () => {
   }));
 
   it('prefills the form with the listitem\'s data if it receives a listitem id from the EditService', async(() => {
-    const editComponent = hostComponent.editComponent;
     hostComponent.listType = 'poems';
     fixture.detectChanges();
-    listItemsStore.dispatch({ type: LOAD, data: stubListItems });
     editService.listItemId$.subscribe(() => {
       fixture.detectChanges();
       const firstInput = el.querySelector('input');
@@ -107,4 +109,54 @@ describe('EditComponent', () => {
     editService.pushListItemId(2);
   }));
 
+  it('onSubmit method calls dbManagerService\'s createOrUpdateListItem method and after a succesfull backend response it emits -1 to the EditService, which causes the form to disappear', () => {
+    hostComponent.listType = 'poems';
+    fixture.detectChanges();
+    const spy = spyOn(dbManagerService, 'createOrUpdateListItem').and.callThrough();
+    editService.listItemId$
+      .pipe(first()) // In the test the editService pushes twice, but the second time the editComponent.listItem is undefined, causing an error
+      .subscribe(() => {
+        fixture.detectChanges();
+        expect(el.querySelector('form')).toBeTruthy();
+        editComponent.editForm.patchValue({ text: 'edited text' });
+        editComponent.onSubmit(editComponent.editForm.value);
+        const editedItem = { id: 2, title: 'title poem2', text: 'edited text', poet_id: '', poet_name: '', bundle_id: '', bundle_title: '', url: '', url_label: '', comment: '' };
+        expect(spy).toHaveBeenCalledWith(hostComponent.listType, editedItem);
+        fixture.detectChanges();
+        expect(el.querySelector('form')).toBeFalsy();
+      });
+    editService.pushListItemId(2);
+  });
+
+  it('deleteListItem method calls dbManagerService\'s deleteListItem method and after a succesfull backend response it emits -1 to the EditService, which causes the form to disappear', () => {
+    hostComponent.listType = 'poems';
+    fixture.detectChanges();
+    const spy = spyOn(dbManagerService, 'deleteListItem').and.callThrough();
+    editService.listItemId$
+      .pipe(first()) // In the test the editService pushes twice, but the second time the editComponent.listItem is undefined, causing an error
+      .subscribe(res => {
+        fixture.detectChanges();
+        expect(el.querySelector('form')).toBeTruthy();
+        editComponent.deleteListItem();
+        expect(spy).toHaveBeenCalledWith(hostComponent.listType, stubListItems[1]);
+        fixture.detectChanges();
+        expect(el.querySelector('form')).toBeFalsy();
+      });
+    editService.pushListItemId(2);
+  });
+
+  it('onForeignKeyChange adjusts the formvalues to the foreign key it gets passed', () => {
+    editComponent.listType = 'poems';
+    const form = editComponent.editForm;
+    const initialFormValue = { text: 'text poem1', title: 'title poem1', poet_id: '', poet_name: '', bundle_id: '', bundle_title: '', url: '', url_label: '', comment: '' };
+    const poet = { id: 2, name: 'poet2' };
+    editService.listItemId$
+      .subscribe(res => {
+        expect(form.value).toEqual(initialFormValue);
+        editComponent.onForeignKeyChange(poet);
+        const newFormValue = { text: 'text poem1', title: 'title poem1', poet_id: 2, poet_name: 'poet2', bundle_id: '', bundle_title: '', url: '', url_label: '', comment: '' };
+        expect(form.value).toEqual(newFormValue);
+      });
+    editService.pushListItemId(1);
+  });
 });

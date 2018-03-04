@@ -2,7 +2,9 @@ import { Subject } from 'rxjs/Subject';
 import { PoemsListItem } from '../models/list-items';
 import { Observable } from 'rxjs/Observable'
 import 'rxjs/add/observable/of';
+
 import { Poet, Bundle } from '../models/foreign-key-children';
+import { ListItem } from '../models/list-items';
 
 export class MockDbManagerService {
   listItems$ = new Subject<PoemsListItem[]>();
@@ -12,8 +14,14 @@ export class MockDbManagerService {
     this.listItems$.next(this.stubListItems);
   }
 
-  editListItem(listType: string, editedItem: any) { }
-  
+  createOrUpdateListItem(listType: string, listItem: ListItem): Observable<boolean>{
+    return Observable.of(true);
+  }
+
+  deleteListItem(listType: string, listItem: ListItem): Observable<boolean>{
+    return Observable.of(true);
+  }
+
   searchingStart() { }
 
   queryChildren(foreignKeyType: string, query: string): Observable<Poet[] | Bundle[]>{
