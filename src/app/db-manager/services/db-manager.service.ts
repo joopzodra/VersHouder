@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { tap, catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { BACKEND_URL, URL } from '../../app-tokens';
 import { ListItem } from '../../models/list-items';
@@ -76,7 +77,7 @@ export class DbManagerService {
           map(() => true),
           catchError(error => {
             console.log(error);
-            return Observable.of(false);
+            return of(false);
           })
         )
     } else {
@@ -86,7 +87,7 @@ export class DbManagerService {
           map(() => true),
           catchError(error => {
             console.log(error);
-            return Observable.of(false);
+            return of(false);
           })
         );
     }
@@ -105,7 +106,7 @@ export class DbManagerService {
         map(() => true),
         catchError(error => {
           console.log(error);
-          return Observable.of(false);
+          return of(false);
         })
       );
   }

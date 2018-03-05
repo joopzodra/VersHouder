@@ -90,7 +90,7 @@ describe('DbManagerService', () => {
     req.flush([1]);
   });
 
-  it('createOrUpdateListItem handles backend errors, it then return an Observable.of(false)', () => {
+  it('createOrUpdateListItem handles backend errors, it then return an of(false) observable', () => {
     service.createOrUpdateListItem(stubListType, { id: 1, text: 'an updated poem' })
       .subscribe(res => {
         expect(res).toBe(false)

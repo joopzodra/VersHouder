@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 import * as cookie from 'cookie';
 
 import { AuthService } from './auth.service';
@@ -43,7 +44,7 @@ export class AuthGuard implements CanActivate {
           document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
           this.router.navigate(['/auth/login']);
           console.log(err);
-          return Observable.of(false);
+          return of(false);
         })
       );
   }

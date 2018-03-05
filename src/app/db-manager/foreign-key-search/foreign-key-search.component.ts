@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { switchMap, catchError, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
 
 import { Poet, Bundle } from '../../models/foreign-key-children';
 import { DbManagerService } from '../services/db-manager.service';
@@ -56,14 +56,14 @@ export class ForeignKeySearchComponent implements OnInit {
         tap(() => this.dbError = false),
         switchMap(value => {
           if (value.query === '') {
-            return Observable.of(<any>[]);
+            return of(<any>[]);
           }
           return this.dbManagerService.queryChildren(this.foreignKeyType, value.query)
         }),
         catchError(err => {
           this.dbError = true;
           console.log(err);
-          return Observable.of(err);
+          return of(err);
         })
       );
   }

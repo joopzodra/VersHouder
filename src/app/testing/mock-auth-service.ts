@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
+import { _throw } from 'rxjs/observable/throw';
+
 import 'rxjs/add/observable/throw';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -12,29 +14,29 @@ export class MockAuthService {
 
   login(value: User): Observable<any> {
     if (value.username === 'bad-user') {
-     return Observable.throw({ status: 401, statusText: 'unauth-user', error: 'unauth-user' });     
+     return _throw({ status: 401, statusText: 'unauth-user', error: 'unauth-user' });     
     }
     if (value.username === 'give-me-error') {
-     return Observable.throw({ status: 500, statusText: 'Database error (JR)', error: 'remote-error' })
+     return _throw({ status: 500, statusText: 'Database error (JR)', error: 'remote-error' })
     }
-    else return Observable.of(''); // Necessary to heaten up observable; otherwise error: Cannot read property 'subscribe' of undefined
+    else return of(''); // Necessary to heaten up observable; otherwise error: Cannot read property 'subscribe' of undefined
   }
   
   signup(value: User): Observable<any> {
-    if (value.username === 'alreadyExistingUser') {
-     return Observable.throw({status: 401, statusText: 'username-already-exists', error: 'username-already-exists'});     
+    if (value.username === 'existingUser') {
+     return _throw({status: 401, statusText: 'username-already-exists', error: 'username-already-exists'});     
     }
     if (value.username === 'giveMeError') {
-     return Observable.throw({ status: 500, statusText: 'Database error (JR)', error: 'remote-error' })
+     return _throw({ status: 500, statusText: 'Database error (JR)', error: 'remote-error' })
     }
-    else return Observable.of(''); // Necessary to heaten up observable,
+    else return of(''); // Necessary to heaten up observable,
   }
 
   getUsername(): Observable<any> {
     if (this.isAuthenticatedOnBackend) {
-      return Observable.of({username: 'good-user'});
+      return of({username: 'good-user'});
     } else {
-      return Observable.throw({ status: 401, statusText: 'unauth-user', error: 'unauth-user' });
+      return _throw({ status: 401, statusText: 'unauth-user', error: 'unauth-user' });
     }    
   }
 
