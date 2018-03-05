@@ -25,7 +25,7 @@
 <div *ngIf="remoteError$ | async, let remoteError" id="remote-error" class="w3-panel w3-text-red">
   <h3>Sorry</h3>
   <p *ngIf="remoteError === 1">Er is geen verbinding met de database.</p>
-  <p *ngIf="remoteError === 500">Er is een probleem met de database. Probeer een nieuwe zoekopdracht.</p>
+  <p *ngIf="remoteError && remoteError !==1">Er is een probleem met de database. Probeer een nieuwe zoekopdracht.</p>
 </div>
 <router-outlet></router-outlet>
 <jr-edit [listType]="listType"></jr-edit>
