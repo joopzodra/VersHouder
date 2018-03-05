@@ -4,11 +4,11 @@
   </form>
 
   <ul *ngIf='selectedChild' class="w3-ul">
-    <li class="w3-border w3-display-container selected-child" style="padding: 8px;">
-      {{selectedChild.name || selectedChild.title}}<span class="w3-button w3-display-right" (click)="removeSelectedChild()">&times;</span>
+    <li class="selected-child">
+      <span class="serif">{{selectedChild.name || selectedChild.title}}</span><span class="w3-button w3-padding-small w3-teal w3-margin-left" (click)="removeSelectedChild()">wijzigen</span>
     </li>
   </ul>
-  <ul *ngIf='!selectedChild' class="w3-ul w3-hoverable">
+  <ul *ngIf='!selectedChild' class="w3-ul w3-hoverable serif">
     <li class="suggested-children" *ngFor="let child of suggestedChildren$ | async" (click)="selectChild(child)">{{showChild(child)}}</li>
   </ul>
 

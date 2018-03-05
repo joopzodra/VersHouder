@@ -1,121 +1,120 @@
-<div *ngIf="listItem">
+<div id="edit-container" class="w3-modal" *ngIf="listItem">
+  <div id="edit-modal-content" class="w3-modal-content">
+    <div *ngIf="!remoteError">
 
-  <div *ngIf="!remoteError">
+      <div id="edit-inner-container" class="w3-container w3-margin">
 
-    <div class="w3-container w3-margin">
+        <header class="w3-container w3-teal w3-display-container">
+          <span (click)="hideForm()"
+          class="w3-button w3-display-topright w3-xlarge">&times;</span>
+          <h2>{{headerInfo[listType]}} {{listItem.id ? 'wijzigen' : 'toevoegen'}}</h2>
+        </header>
 
-      <header class="w3-container w3-teal w3-display-container">
-        <span (click)="hideForm()"
-        class="w3-button w3-display-topright w3-xlarge">&times;</span>
-        <h2>{{headerInfo[listType]}} {{listItem.id ? 'wijzigen' : 'toevoegen'}}</h2>
-      </header>
+        <div [ngSwitch]="listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
+          <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)" class="w3-container w3-padding-16">
 
-      <div [ngSwitch]="listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
-        <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)" class="w3-container w3-padding-16">
-
-          <div *ngSwitchCase="'poems'" class="">
-            <p>
-              <label>Titel</label>
-              <input class="w3-input w3-border" type="text" formControlName="title" placeholder="niet verplicht">
-            </p>
-            <p>
-              <label>Gedicht*</label>
-              <textarea class="w3-input w3-border" rows=12 formControlName="text" placeholder="verplicht, maximale lengte 30.000 tekens"></textarea>
-            </p>
-            <jr-show-error text="Gedicht" path="text"></jr-show-error>
-            <p>
-              <label>Commentaar</label>
-              <textarea class="w3-input w3-border" rows=4 formControlName="comment" placeholder="niet verplicht"></textarea>
-            </p>
-            <p>
-              <label>Dichter</label>
-              <jr-foreign-key-search [foreignKeyType]="'poets'" [foreignKey]="listItem.poet_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
-            </p>
-            <p>
-              <label>Bundel</label>
-              <jr-foreign-key-search [foreignKeyType]="'bundles'" [foreignKey]="listItem.bundle_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
-            </p>
-            <p>
-              <label>Bron, hyperlink-URL</label>
-              <input class="w3-input w3-border" type="text" formControlName="url" placeholder="niet verplicht, begin met 'http://' of 'https://'">
-            </p>
-            <jr-show-error text="Hyperlink-URL" path="url"></jr-show-error>
-            <p>
-              <label>Bron, hyperlink-tekstlabel</label>
-              <input class="w3-input w3-border" type="text" formControlName="url_label" placeholder="niet verplicht">
-            </p>
-            <div *ngIf="editForm.get('url_label').value !== '' && editForm.hasError('invalidUrlLabel')" class="w3-panel w3-yellow">
-              Vul een geldige hyperlink-URL in.                         
+            <div *ngSwitchCase="'poems'" class="">
+              <p>
+                <label>Titel</label>
+                <input class="w3-input w3-border" type="text" formControlName="title" placeholder="niet verplicht">
+              </p>
+              <p>
+                <label>Gedicht*</label>
+                <textarea class="w3-input w3-border" rows=12 formControlName="text" placeholder="verplicht, maximale lengte 30.000 tekens"></textarea>
+              </p>
+              <jr-show-error text="Gedicht" path="text"></jr-show-error>
+              <p>
+                <label>Commentaar</label>
+                <textarea class="w3-input w3-border" rows=4 formControlName="comment" placeholder="niet verplicht"></textarea>
+              </p>
+              <p>
+                <label>Dichter</label>
+                <jr-foreign-key-search [foreignKeyType]="'poets'" [foreignKey]="listItem.poet_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
+              </p>
+              <p>
+                <label>Bundel</label>
+                <jr-foreign-key-search [foreignKeyType]="'bundles'" [foreignKey]="listItem.bundle_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
+              </p>
+              <p>
+                <label>Bron, hyperlink-URL</label>
+                <input class="w3-input w3-border" type="text" formControlName="url" placeholder="niet verplicht, begin met 'http://' of 'https://'">
+              </p>
+              <jr-show-error text="Hyperlink-URL" path="url"></jr-show-error>
+              <p>
+                <label>Bron, hyperlink-tekstlabel</label>
+                <input class="w3-input w3-border" type="text" formControlName="url_label" placeholder="niet verplicht">
+              </p>
+              <div *ngIf="editForm.get('url_label').value !== '' && editForm.hasError('invalidUrlLabel')" class="w3-panel w3-yellow">
+                Vul een geldige hyperlink-URL in.                         
+              </div>
             </div>
-          </div>
 
-          <div *ngSwitchCase="'poets'" class="">
-            <p>
-              <label>Naam*</label>
-              <input class="w3-input w3-border" type="text" formControlName="name" placeholder="verplicht">
-            </p>
-            <jr-show-error text="Naam" path="name"></jr-show-error>
-            <p>
-              <label>Geboortejaar</label>
-              <input class="w3-input w3-border" type="number" formControlName="born" placeholder="niet verplicht">
-              <jr-show-error text="Geboortejaar" path="born"></jr-show-error>
-            </p>
-            <p>
-              <label>Sterfjaar</label>
-              <input class="w3-input w3-border" type="number" formControlName="died" placeholder="niet verplicht">
-              <jr-show-error text="Sterfjaar" path="died"></jr-show-error>
-            </p>          
-          </div>
+            <div *ngSwitchCase="'poets'" class="">
+              <p>
+                <label>Naam*</label>
+                <input class="w3-input w3-border" type="text" formControlName="name" placeholder="verplicht">
+              </p>
+              <jr-show-error text="Naam" path="name"></jr-show-error>
+              <p>
+                <label>Geboortejaar</label>
+                <input class="w3-input w3-border" type="number" formControlName="born" placeholder="niet verplicht">
+                <jr-show-error text="Geboortejaar" path="born"></jr-show-error>
+              </p>
+              <p>
+                <label>Sterfjaar</label>
+                <input class="w3-input w3-border" type="number" formControlName="died" placeholder="niet verplicht">
+                <jr-show-error text="Sterfjaar" path="died"></jr-show-error>
+              </p>          
+            </div>
 
-          <div *ngSwitchCase="'bundles'" class="">
-            <p>
-              <label>Titel*</label>
-              <input class="w3-input w3-border" type="text" formControlName="title">
-            </p>
-            <jr-show-error text="Titel" path="title"></jr-show-error>
-            <p>
-              <label>Dichter (of samensteller)</label>
-              <jr-foreign-key-search [foreignKeyType]="'poets'" [foreignKey]="listItem.poet_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
-            </p>
-            <p>
-              <label>Jaar van publicatie</label>
-              <input class="w3-input w3-border" type="number" formControlName="year">
-            </p>
-          </div>
+            <div *ngSwitchCase="'bundles'" class="">
+              <p>
+                <label>Titel*</label>
+                <input class="w3-input w3-border" type="text" formControlName="title">
+              </p>
+              <jr-show-error text="Titel" path="title"></jr-show-error>
+              <p>
+                <label>Dichter (of samensteller)</label>
+                <jr-foreign-key-search [foreignKeyType]="'poets'" [foreignKey]="listItem.poet_id" (onForeignKeyChange)="onForeignKeyChange($event)"></jr-foreign-key-search>
+              </p>
+              <p>
+                <label>Jaar van publicatie</label>
+                <input class="w3-input w3-border" type="number" formControlName="year">
+              </p>
+            </div>
 
-          <div>    
-            <button class="w3-button w3-blue w3-section" (click)="hideForm()">Annuleren</button>
-          </div>
-          <div>
-            <button class="w3-button w3-blue w3-section" type="submit" [disabled]="editForm.invalid">Opslaan</button>
-          </div>
-          <div>
-            <button class="w3-button w3-red w3-section" (click)="askDeleteConfirmation()">{{headerInfo[listType]}} verwijderen</button>
-          </div>
-        </form>
+            <div class="button-bar">    
+              <button class="w3-button w3-blue w3-section" (click)="hideForm()">Annuleren</button>
+              <button class="w3-button w3-blue" type="submit" [disabled]="editForm.invalid">Opslaan</button>
+            </div>
+            <div>
+              <button class="w3-button w3-red w3-section" (click)="askDeleteConfirmation()">{{headerInfo[listType]}} verwijderen</button>
+            </div>
+          </form>
+        </div>
+
       </div>
 
-    </div>
-
-    <div [ngStyle]="{'display': askDeleteConfirmationDisplay }" class="w3-modal">
-      <div class="w3-modal-content">
-        <div class="w3-container">
-          <h3>{{headerInfo[listType]}} verwijderen?</h3>
-          <p *ngIf="listItem.title">Titel: {{listItem.title}}</p>
-          <p *ngIf="listItem.name">Naam: {{listItem.name}}</p>
-          <p *ngIf="listItem.text">Beginregel: {{listItem.text.split('\n')[0]}}</p>
-          <button class="w3-button w3-blue w3-section" (click)="hideDeleteConfirmation()">Annuleren</button>
-          <button class="w3-button w3-red w3-section" (click)="deleteListItem()">Verwijderen</button>
+      <div [ngStyle]="{'display': askDeleteConfirmationDisplay }" id="confirmation-modal" class="w3-modal">
+        <div class="w3-modal-content">
+          <div class="w3-container">
+            <h3>{{headerInfo[listType]}} verwijderen?</h3>
+            <p *ngIf="listItem.title">Titel: {{listItem.title}}</p>
+            <p *ngIf="listItem.name">Naam: {{listItem.name}}</p>
+            <p *ngIf="listItem.text">Beginregel: {{listItem.text.split('\n')[0]}}</p>
+            <button class="w3-button w3-blue w3-section" (click)="hideDeleteConfirmation()">Annuleren</button>
+            <button class="w3-button w3-red w3-section" (click)="deleteListItem()">Verwijderen</button>
+          </div>
         </div>
       </div>
+
     </div>
 
+    <div *ngIf="remoteError" id="remote-error" class="w3-panel w3-text-red">
+      <h3>Sorry</h3>
+      <p>Er is een probleem met de database. Je gegevens zijn niet opgeslagen.</p>
+      <button class="w3-button w3-blue w3-section" (click)="hideRemoteErrorMessage()">OK</button>
+    </div>
+    
   </div>
-
-  <div *ngIf="remoteError" id="remote-error" class="w3-panel w3-text-red">
-    <h3>Sorry</h3>
-    <p>Er is een probleem met de database. Je gegevens zijn niet opgeslagen.</p>
-    <button class="w3-button w3-blue w3-section" (click)="hideRemoteErrorMessage()">OK</button>
-  </div>
-
 </div>

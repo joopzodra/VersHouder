@@ -1,0 +1,32 @@
+#edit-container.w3-modal {
+  display: block;
+}
+
+#confirmation-modal.w3-modal {
+  background-color: rgba(0,0,0,0.75);
+}
+
+#edit-modal-content.w3-modal-content {
+  background-color: transparent;
+  padding: 0;
+}
+
+#edit-inner-container.w3-container {
+  background-color: #fff;
+  padding: 0;
+}
+.button-bar {
+  text-align: right;
+}
+.button-bar button:nth-child(2) {
+  margin-left: 24px;
+}
+label {
+  font-weight: bold;
+}
+
+@media (max-width:600px) {
+  .button-bar button:nth-child(2) {
+  margin-left: 12px;
+}
+}

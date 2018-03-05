@@ -1,27 +1,31 @@
-<div [ngSwitch]="listType">
-  <form [formGroup]="searchForm" class="w3-container w3-padding-16">
+<div *ngIf="!(hide$ | async)" [ngSwitch]="listType">
+  <form [formGroup]="searchForm" class="w3-container w3-padding-16 w3-margin-top w3-margin-left w3-margin-right w3-border">
 
-    <div *ngSwitchCase="'poems'" class="searchboxHeader">Zoek in de gedichten naar:
-      <input class="w3-radio" type="radio" name="searchFor" value="poems.title" formControlName="searchFor">
-      <label>titel</label>
-      <input class="w3-radio" type="radio" name="searchFor" value="poems.text" formControlName="searchFor">
-      <label>versregels</label> 
-      <input class="w3-radio" type="radio" name="searchFor" value="poets.name" formControlName="searchFor">
-      <label>naam dichter</label>
+    <div *ngSwitchCase="'poems'">Zoek in gedichten naar:
+      <div>
+        <input class="w3-radio" id="poems-title" type="radio" name="searchFor" value="poems.title" formControlName="searchFor">
+        <label for="poems-title">titel</label>
+        <input class="w3-radio" id="poems-text" type="radio" name="searchFor" value="poems.text" formControlName="searchFor">
+        <label for="poems-text">versregels</label> 
+        <input class="w3-radio" id="poets-name1" type="radio" name="searchFor" value="poets.name" formControlName="searchFor">
+        <label for="poets-name1">dichter</label>
+      </div>
     </div>
 
-    <div *ngSwitchCase="'poets'" class="searchboxHeader">Zoek in de dichters naar:
+    <div *ngSwitchCase="'poets'">Zoek in dichters naar:
     </div>
 
-    <div *ngSwitchCase="'bundles'" class="searchboxHeader">Zoek in de bundels naar:
-      <input class="w3-radio" type="radio" name="searchFor" value="bundles.title" formControlName="searchFor">
-      <label>titel van bundel</label>
-      <input class="w3-radio" type="radio" name="searchFor" value="poets.name" formControlName="searchFor">
-      <label>naam dichter (of samensteller)</label>
+    <div *ngSwitchCase="'bundles'">Zoek in bundels naar:
+      <div>
+        <input class="w3-radio" id="bundles-title" type="radio" name="searchFor" value="bundles.title" formControlName="searchFor">
+        <label for="bundles-title">titel</label>
+        <input class="w3-radio" id="poets-name2" type="radio" name="searchFor" value="poets.name" formControlName="searchFor">
+        <label for="poets-name2">dichter of samensteller</label>
+      </div>
     </div>
 
-    <div class="w3-container w3-border-left w3-border-right ">
-      <input class="w3-input w3-border w3-margin-bottom" type="text" formControlName="query" placeholder="zoekterm ...">
+    <div>
+      <input class="w3-input w3-border w3-margin-bottom w3-margin-top" type="text" formControlName="query" placeholder="zoekterm ...">
     </div>
 
 <!--     <div class="w3-display-container">
@@ -29,13 +33,15 @@
       <p class="w3-right w3-margin w3-tag w3-theme-l1" *ngIf="entriesLength == maxItemsPerPage" (click)="nextEntries()">Volgende >></p>
     </div> -->
 
-    <div class="w3-container w3-border-left w3-border-right w3-border-bottom w3-padding-24"> Aantal items per pagina:
-      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="20" formControlName="maxItemsPerPage">
-      <label>20</label>
-      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="50" formControlName="maxItemsPerPage">
-      <label>50</label>
-      <input class="w3-radio" type="radio" name="maxItemsPerPage" value="100" formControlName="maxItemsPerPage">
-      <label>100</label> 
+    <div> Aantal items per pagina:
+      <div>
+        <input class="w3-radio" id="pages-20" type="radio" name="maxItemsPerPage" value="20" formControlName="maxItemsPerPage">
+        <label for="pages-20">20</label>
+        <input class="w3-radio" id="pages-50" type="radio" name="maxItemsPerPage" value="50" formControlName="maxItemsPerPage">
+        <label for="pages-50">50</label>
+        <input class="w3-radio" id="pages-100" type="radio" name="maxItemsPerPage" value="100" formControlName="maxItemsPerPage">
+        <label for="pages-100">100</label> 
+      </div>
     </div>
 
   </form> 

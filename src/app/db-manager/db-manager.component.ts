@@ -14,14 +14,17 @@ import { EditService } from './services/edit.service';
 
 @Component({
   templateUrl: './db-manager.component.html',
+  styleUrls: ['./db-manager.component.scss'],
   providers: [EditService]
 })
 export class DbManagerComponent implements OnDestroy {
 
   routerSubscription: Subscription;
-  listType: string; // 'poems' | 'poets' | 'bundles'
+  listType: string; // 'poems' | 'poets' | 'bundles';
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+  ) {
     this.routerSubscription = this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),

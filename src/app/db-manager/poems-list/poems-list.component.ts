@@ -1,12 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { filter } from 'rxjs/operators';
 
 import { DbManagerService } from '../services/db-manager.service';
 import { ListItemsStore } from '../services/list-items.store';
 import { PoemsListItem } from '../../models/list-items';
 import { EditService } from '../services/edit.service';
+import { HideComponentsService } from '../services/hide-components.service';
 
 /* The PoemsListComponent shows a list with poems.
  * It receives the poems from the ListItemsStore.
@@ -17,7 +20,8 @@ import { EditService } from '../services/edit.service';
  */
 
 @Component({
-  templateUrl: './poems-list.component.html'
+  templateUrl: './poems-list.component.html',
+  styleUrls: ['./poems-list.component.scss']
 })
 export class PoemsListComponent implements OnInit {
 
@@ -27,6 +31,7 @@ export class PoemsListComponent implements OnInit {
   searching: boolean;
   remoteError: number;
   listType = 'poems';
+  hide$: Observable<boolean>;
 
   constructor(
     private titleService: Title,
@@ -35,6 +40,7 @@ export class PoemsListComponent implements OnInit {
     private listItemsStore: ListItemsStore,
     private router: Router,
     private editService: EditService,
+    private hideComponentsService: HideComponentsService
   ) { }
 
   ngOnInit() {
@@ -43,13 +49,14 @@ export class PoemsListComponent implements OnInit {
     this.listItems$ = <Observable<PoemsListItem[]>>this.listItemsStore.listItems$;
     this.searching$ = this.dbManagerService.searching$;
     this.remoteError$ = this.dbManagerService.remoteError$;
+    this.hide$ = this.hideComponentsService.hide$
   }
 
   showPoem(id: string) {
     this.router.navigate(['/db-manager/poems/poem', id]);
   }
 
-  addListItem(){
+  addListItem() {
     this.editService.pushListItemId(0);
   }
 

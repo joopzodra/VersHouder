@@ -50,7 +50,7 @@ describe('SignupFormComponent', () => {
 
   it('handles user username-already-exists response if it receives one from the backend by the AuthService\'s signup method', async(() => {
     expect(component.duplicateUsername).toBeFalsy();
-    const testUser = { username: 'alreadyExistingUser', password: 'secret' }
+    const testUser = { username: 'existingUser', password: 'secret' }
     component.signupForm.setValue(testUser);
     component.onSubmit(testUser);
     expect(component.duplicateUsername).toBeTruthy();

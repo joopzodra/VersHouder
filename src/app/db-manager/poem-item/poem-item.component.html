@@ -1,26 +1,27 @@
-<div>
-  <div *ngIf="poemItem$ | async, let poemItem" class="w3-container w3-margin-top">
+<div id="poem-item-container">
+  <div *ngIf="poemItem$ | async, let poemItem" class="w3-container w3-section">
 
     <header class="w3-container w3-display-container w3-teal">
-      <h2>{{poemItem.title ? poemItem.title : poemItem.text.split('\\n')[0]}}</h2>
+      <h2 class="serif">{{poemItem.title ? poemItem.title : poemItem.text.split('\\n')[0]}}</h2>
       <span (click)="hidePoemItem()" class="w3-button w3-display-topright w3-xlarge">&times;</span>
       <div class="w3-container w3-teal">
       <button class="w3-button w3-theme-d2 w3-margin-bottom" (click)="editListItem(poemItem.id)">Wijzigen</button>
       </div>
     </header>
 
-    <div class="w3-container w3-border-left w3-border-right w3-padding-24">
+    <div class="w3-container w3-border-left w3-border-right w3-padding-24 serif">
       <p class="poem-text" *ngFor="let line of poemItem.text.split('\n')">{{line.trim() === '' ? '&nbsp;' : line}}</p>
     </div>
 
-    <div class="w3-container w3-border-left w3-border-right w3-padding-24">
-      <p class="source-url">Bron: <a [href]="poemItem.url">{{poemItem.url_label || poemItem.url}}</a><span *ngIf="!poemItem.url">–</span></p>
-      <p class="poem-comment">Toelichting: {{poemItem.comment ? poemItem.comment : '–'}}</p>
+    <div *ngIf="poemItem.comment" class="w3-container w3-border-left w3-border-right">
+      <p class="comment"><span class="comment-header">Toelichting</span><br>
+      {{poemItem.comment}}</p>
     </div>
 
     <footer class="w3-container w3-teal">
-      <p>Door: {{poemItem.poet_name ? poemItem.poet_name : '–'}}</p>
-      <p>{{poemItem.bundle_title ? 'Uit: ' + poemItem.bundle_title : ''}}</p>
+      <p>Door: <span class="italic">{{poemItem.poet_name ? poemItem.poet_name : '–'}}</span></p>
+      <p *ngIf="poemItem.bundle_title">Uit: <span class="italic">{{poemItem.bundle_title}}</span></p>
+      <p *ngIf="poemItem.url">Bron: <span class="italic"><a [href]="poemItem.url">{{poemItem.url_label || poemItem.url}}</a></span></p>
     </footer>
   </div>
 </div>

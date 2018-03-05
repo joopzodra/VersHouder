@@ -1,0 +1,19 @@
+#header-bar {
+  display: flex;
+}
+#app-title {
+  flex: 5 5 80%;
+  text-align: center;
+  margin-left: 20%;
+}
+#user-badge-and-logout {
+  flex: 1 0 20%;
+  align-self: center;
+  margin-right: 20px;
+}
+
+@media (max-width:600px) {
+  #app-title {
+    font-size: 24px;
+  }
+}

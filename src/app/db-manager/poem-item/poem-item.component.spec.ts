@@ -10,6 +10,7 @@ import { ListItemsStore } from '../services/list-items.store';
 import { StubListItemsStore } from '../../testing/stub-list-items-store'
 import { EditService } from '../services/edit.service';
 import { PoemsListItem } from '../../models/list-items';
+import { HideComponentsService } from '../services/hide-components.service';
 
 describe('PoemItemComponent', () => {
   let component: PoemItemComponent;
@@ -32,7 +33,8 @@ describe('PoemItemComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: 'Test title' }, params: { listType: 'poems', id: 1 } } } },
         { provide: ListItemsStore, useClass: StubListItemsStore },
-        EditService
+        EditService,
+        HideComponentsService
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });

@@ -17,3 +17,15 @@ svg {
 .arrow-down {
   font-size: 7px;
 }
+
+@media (max-width:600px) {
+  svg {
+    display: none;
+  }
+  .text-container {
+    font-size: 13px;
+  }
+}
+.logout-button {
+  width: 100%;
+}

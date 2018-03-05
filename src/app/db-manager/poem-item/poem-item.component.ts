@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -9,6 +9,7 @@ import { map, tap } from 'rxjs/operators';
 import { PoemsListItem } from '../../models/list-items';
 import { ListItemsStore } from '../services/list-items.store';
 import { EditService } from '../services/edit.service';
+import { HideComponentsService } from '../services/hide-components.service';
 
 /* The PoemItemComponent shows the full text of a poem and some more info about the poem.
  * It receives the poem from the ListItemsStore.
@@ -21,7 +22,7 @@ import { EditService } from '../services/edit.service';
   templateUrl: './poem-item.component.html',
   styleUrls: ['./poem-item.component.scss']
 })
-export class PoemItemComponent implements OnInit/*, OnDestroy*/ {
+export class PoemItemComponent implements OnInit, OnDestroy {
 
   listItemsStoreSubscription: Subscription;
   poemItem$: Observable<PoemsListItem>;
@@ -34,10 +35,12 @@ export class PoemItemComponent implements OnInit/*, OnDestroy*/ {
     private listItemsStore: ListItemsStore,
     private location: Location,
     private editService: EditService,
-    private router: Router
+    private router: Router,
+    private hideComponentsService: HideComponentsService
   ) {
     const paramsId = this.activatedRoute.snapshot.params.id;
     this.poemsListItemId = +paramsId;
+    this.hideComponentsService.pushHide(true);
   }
 
   ngOnInit() {
@@ -64,4 +67,7 @@ export class PoemItemComponent implements OnInit/*, OnDestroy*/ {
     this.editService.pushListItemId(idNum);
   }
 
+  ngOnDestroy() {
+    this.hideComponentsService.pushHide(false);
+  }
 }

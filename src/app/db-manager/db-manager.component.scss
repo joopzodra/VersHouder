@@ -1,0 +1,10 @@
+$max-width: 1000px;
+
+#db-manager-container {
+  max-width: $max-width;
+  margin: 0 auto;
+}
+#db-manager-router-outlet{
+  max-width: $max-width - 32px;
+  margin: 0 auto 24px;
+}

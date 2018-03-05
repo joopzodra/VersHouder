@@ -8,9 +8,9 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { DbManagerService } from '../services/db-manager.service';
-import { MockDbManagerService } from '../../testing/mock-db-manager-service'
-
+import { MockDbManagerService } from '../../testing/mock-db-manager-service';
 import { SearchComponent } from './search.component';
+import { HideComponentsService } from '../services/hide-components.service';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -23,7 +23,9 @@ describe('SearchComponent', () => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       declarations: [SearchComponent],
-      providers: [{ provide: DbManagerService, useClass: MockDbManagerService },]
+      providers: [{ provide: DbManagerService, useClass: MockDbManagerService },
+      HideComponentsService
+      ]
     });
   }));
 

@@ -1,8 +1,13 @@
-<div *ngIf="!(searching$ | async)">
+<div *ngIf="!(searching$ | async) && !(hide$ | async)">
   <div>
-    <button class="w3-button w3-blue w3-section" (click)="addListItem()">+ Nieuw gedicht</button>
+    <button class="w3-button w3-blue w3-section w3-margin-left" (click)="addListItem()">+ Nieuw gedicht</button>
   </div>
-  <table class="w3-table w3-striped  w3-hoverable w3-border-left w3-border-right">
+  <table class="w3-table w3-striped  w3-hoverable w3-border">
+    <colgroup>
+      <col class="poet" />
+      <col class="title" />
+      <col class="first-lines" />
+    </colgroup>
     <tr class="w3-teal">
       <th>Dichter</th>
       <th>Titel</th>

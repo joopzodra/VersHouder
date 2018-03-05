@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { debounceTime, tap } from 'rxjs/operators';
 
 import { DbManagerService } from '../services/db-manager.service';
+import { HideComponentsService } from '../services/hide-components.service';
 
 /* The SearchComponent offers a seach field (html input element) by which the user can search for listItems (poems, poets or bundles).
  * When the user types a search term, a query is sent to the DbManagerService's getListItems method.
@@ -24,8 +25,13 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
   searchForm: FormGroup;
   searchFormSubscription: Subscription;
   searching: EventEmitter<boolean>;
+  hide$: Observable<boolean>;
 
-  constructor(private dbManagerService: DbManagerService, private fb: FormBuilder) {
+  constructor(
+    private dbManagerService: DbManagerService,
+    private fb: FormBuilder,
+    private hideComponentsService: HideComponentsService
+  ) {
     this.searchForm = fb.group({
       searchFor: [this.defaultSearchFor],
       query: [''],
@@ -43,6 +49,7 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
         this.dbManagerService.getListItems(this.listType, formValue);
       }); // Toevoegen: this.offset, +this.maxListItems);
     this.searchForm.patchValue({ searchFor: this.defaultSearchFor() });
+    this.hide$ = this.hideComponentsService.hide$;
   }
 
   ngOnChanges() {

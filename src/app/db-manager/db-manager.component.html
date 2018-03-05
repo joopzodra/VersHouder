@@ -1,3 +1,7 @@
 <jr-navigation></jr-navigation>
-<jr-search-entries [listType]="listType"></jr-search-entries>
-<router-outlet></router-outlet>
+<div id="db-manager-container">
+  <jr-search-entries [listType]="listType"></jr-search-entries>
+  <div id="db-manager-router-outlet">
+    <router-outlet></router-outlet>
+  </div>
+</div>

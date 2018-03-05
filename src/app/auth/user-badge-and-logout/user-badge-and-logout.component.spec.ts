@@ -44,11 +44,11 @@ describe('UserBadgeAndLogoutComponent', () => {
 
   it('if a user is logged in, it contains a logout button; when this is clicked it calls the AuthService logout method', () => {
     const spy = spyOn(authService, 'logout');
-    let logoutButton = de.query(By.css('.w3-bar-item.w3-button'));
+    let logoutButton = de.query(By.css('.logout-button'));
     expect(logoutButton).toBeFalsy();
     (<any>authService).username$.next('good-user');
     fixture.detectChanges();
-    logoutButton = de.query(By.css('.w3-bar-item.w3-button'));
+    logoutButton = de.query(By.css('.logout-button'));
     logoutButton.triggerEventHandler('click', null);
     expect(spy).toHaveBeenCalled();
   });

@@ -9,7 +9,7 @@ import { PoetsListComponent } from './db-manager/poets-list/poets-list.component
 import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
 import { EditComponent } from './db-manager/edit/edit.component';
 import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
-//import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export function loadAuthModule() {
   return AuthModule;
@@ -29,7 +29,7 @@ const appRoutes: Routes = [
       { path: 'bundles', component: BundlesListComponent, data: { title: 'Gedichtenbundels' } },
   ]},
   { path: '', redirectTo: 'db-manager', pathMatch: 'full' },
-  //{ path: '**', component: PageNotFoundComponent }
+  { path: '**', canActivate: [AuthGuard], component: PageNotFoundComponent }
 ];
 
 @NgModule({

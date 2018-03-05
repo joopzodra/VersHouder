@@ -17,11 +17,13 @@ import { PoetsListComponent } from './db-manager/poets-list/poets-list.component
 import { BundlesListComponent } from './db-manager/bundles-list/bundles-list.component';
 import { EditComponent } from './db-manager/edit/edit.component';
 import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
+import { ShowErrorComponent } from './db-manager/show-error/show-error.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { DbManagerService } from './db-manager/services/db-manager.service';
 import { ListItemsStore } from './db-manager/services/list-items.store';
 import { ForeignKeySearchComponent } from './db-manager/foreign-key-search/foreign-key-search.component';
-import { ShowErrorComponent } from './db-manager/show-error/show-error.component';
+import { HideComponentsService } from './db-manager/services/hide-components.service';
 
 @NgModule({
   declarations: [
@@ -37,18 +39,20 @@ import { ShowErrorComponent } from './db-manager/show-error/show-error.component
     PoemItemComponent,
     ForeignKeySearchComponent,
     ShowErrorComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule,
     AuthModule,
+    AppRoutingModule,
   ],
   providers: [
     Title,
     DbManagerService,
-    ListItemsStore
+    ListItemsStore,
+    HideComponentsService
   ],
   bootstrap: [AppComponent]
 })

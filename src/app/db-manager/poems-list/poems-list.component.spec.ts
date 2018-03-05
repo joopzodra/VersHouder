@@ -11,6 +11,7 @@ import { MockDbManagerService } from '../../testing/mock-db-manager-service'
 import { PoemsListComponent } from './poems-list.component';
 import { PoemsListItem } from '../../models/list-items';
 import { EditService } from '../services/edit.service';
+import { HideComponentsService } from '../services/hide-components.service';
 
 describe('PoemsListComponent', () => {
   let component: PoemsListComponent;
@@ -29,7 +30,8 @@ describe('PoemsListComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: 'Test title' } } } },
         { provide: DbManagerService, useClass: MockDbManagerService },
         { provide: ListItemsStore, useClass: StubListItemsStore },
-        EditService
+        EditService,
+        HideComponentsService
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
