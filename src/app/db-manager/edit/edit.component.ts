@@ -108,7 +108,7 @@ export class EditComponent implements OnInit, OnDestroy {
       case 'bundles':
         this.editForm = fb.group({
           title: ['', Validators.required],
-          year: '',
+          year: ['', Validators.pattern(/^\d{4}$/)],
           poet_id: '',
           poet_name: ''
         });
