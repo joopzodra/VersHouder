@@ -41,7 +41,7 @@ export class ShowErrorComponent {
             message = `${this.displayName} mag maximaal ${error.requiredLength} tekens bevatten. (Bevat nu ${error.actualLength} tekens.)`;
             break;
           case 'pattern':
-            if (this.controlPath === 'born' || this.controlPath === 'died') {
+            if (this.controlPath === 'born' || this.controlPath === 'died' || this.controlPath === 'year') {
               message = `${this.displayName} moet uit vier cijfers bestaan.`;
             } else {
               message = ''; // Currently no else cases. Keeping if-else just for the case we once may need it some day.

@@ -57,12 +57,12 @@
               <jr-show-error text="Naam" path="name"></jr-show-error>
               <p>
                 <label>Geboortejaar</label>
-                <input class="w3-input w3-border" type="number" formControlName="born" placeholder="niet verplicht">
+                <input class="w3-input w3-border" type="text" formControlName="born" placeholder="niet verplicht">
                 <jr-show-error text="Geboortejaar" path="born"></jr-show-error>
               </p>
               <p>
                 <label>Sterfjaar</label>
-                <input class="w3-input w3-border" type="number" formControlName="died" placeholder="niet verplicht">
+                <input class="w3-input w3-border" type="text" formControlName="died" placeholder="niet verplicht">
                 <jr-show-error text="Sterfjaar" path="died"></jr-show-error>
               </p>          
             </div>
@@ -79,7 +79,8 @@
               </p>
               <p>
                 <label>Jaar van publicatie</label>
-                <input class="w3-input w3-border" type="number" formControlName="year">
+                <input class="w3-input w3-border" type="text" formControlName="year" placeholder="niet verplicht">
+                <jr-show-error text="Jaar van publicatie" path="year"></jr-show-error>
               </p>
             </div>
 
@@ -87,7 +88,7 @@
               <button class="w3-button w3-blue w3-section" (click)="hideForm()">Annuleren</button>
               <button class="w3-button w3-blue" type="submit" [disabled]="editForm.invalid">Opslaan</button>
             </div>
-            <div>
+            <div *ngIf="listItem.id">
               <button class="w3-button w3-red w3-section" (click)="askDeleteConfirmation()">{{headerInfo[listType]}} verwijderen</button>
             </div>
           </form>

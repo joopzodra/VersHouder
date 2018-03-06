@@ -24,7 +24,6 @@ export class ForeignKeySearchComponent implements OnInit {
   @Input() foreignKeyType: string;
   @Input() foreignKey: number;
   @Output() onForeignKeyChange = new EventEmitter<Poet | Bundle>();
-  childSelected: Poet | Bundle;
   searchChildForm: FormGroup;
   suggestedChildren$: Observable<Poet[] | Bundle[]>;
   selectedChild: Poet | Bundle;

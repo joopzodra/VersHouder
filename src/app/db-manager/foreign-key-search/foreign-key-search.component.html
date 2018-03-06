@@ -1,5 +1,5 @@
 <div>
-  <form *ngIf="!dbError" [formGroup]="searchChildForm" (ngSubmit)="onSubmit(searchChild.value)">
+  <form *ngIf="!dbError" [formGroup]="searchChildForm">
     <input *ngIf='!selectedChild' class="w3-input w3-border" type="text" formControlName="query" placeholder="niet verplicht">
   </form>
 
@@ -8,12 +8,24 @@
       <span class="serif">{{selectedChild.name || selectedChild.title}}</span><span class="w3-button w3-padding-small w3-teal w3-margin-left" (click)="removeSelectedChild()">wijzigen</span>
     </li>
   </ul>
-  <ul *ngIf='!selectedChild' class="w3-ul w3-hoverable serif">
-    <li class="suggested-children" *ngFor="let child of suggestedChildren$ | async" (click)="selectChild(child)">{{showChild(child)}}</li>
-  </ul>
+
+  <ng-container *ngIf="!selectedChild">
+    <ng-container *ngIf="suggestedChildren$ | async; let suggestedChildren">
+      <ul class="w3-ul w3-hoverable serif">
+        <li *ngFor="let child of suggestedChildren" (click)="selectChild(child)">{{showChild(child)}}</li>
+      </ul>
+      <ul class="w3-ul w3-yellow" *ngIf="suggestedChildren.length===0 && searchChildForm.value.query !=='' ">
+        <li>
+          <span *ngIf="foreignKeyType==='poets'">Er staan in de database geen dichters met <span class="bold">{{searchChildForm.value.query}}</span> in de naam. Dit item wordt opgeslagen zonder dichter. Wil je dat niet, voeg dan eerst de dichter aan de database toe en ga daarna pas dit item toevoegen of wijzigen.</span>
+          <span *ngIf="foreignKeyType==='bundles'">Er staan in de database geen bundels met <span class="bold">{{searchChildForm.value.query}}</span> in de titel. Dit item wordt opgeslagen zonder bundel. Wil je dat niet, voeg dan eerst de bundel aan de database toe en ga daarna pas dit item toevoegen of wijzigen..</span>
+        </li>
+      </ul>
+    </ng-container>
+  </ng-container>
 
   <p *ngIf="dbError" class="w3-text-red">Kan de 
     <span *ngIf="foreignKeyType==='poets'">naam van de dichter</span>
     <span *ngIf="foreignKeyType==='bundles'">titel van de bundel</span>    
   niet veranderen. Er is een probleem met de database. Klik op 'Annuleren' en probeer dan opnieuw het item te wijzigen.</p>
+
 </div>
