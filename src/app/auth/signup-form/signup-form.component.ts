@@ -31,8 +31,8 @@ export class SignupFormComponent {
     private fb: FormBuilder
   ) { 
     this.signupForm = fb.group({
-      username: ['', [Validators.minLength(4), Validators.maxLength(15), Validators.pattern('[A-Za-z0-9]+')]],
-      password: ['', [Validators.minLength(4), Validators.maxLength(15), Validators.pattern('[^ ]+')]]
+      username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(15), Validators.pattern('[A-Za-z0-9]+')]],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern('[^ ]+')]]
     })
   }
 
