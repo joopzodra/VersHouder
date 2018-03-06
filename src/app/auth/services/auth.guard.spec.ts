@@ -34,13 +34,13 @@ describe('AuthGuard', () => {
   }));
 
   it('allows a route if there is a valid auth-cookie and a username is set', inject([AuthGuard], (guard: AuthGuard) => {
-    document.cookie = 'auth=yes; path=/; max-age=1800';
+    document.cookie = 'auth=yes; path=/; max-age=3600';
     guard.username = 'good-user'
     expect(guard.canActivate(<any>{}, <any>{})).toBeTruthy();
   }));
 
   it('allows a route if there is a valid auth-cookie, without a username set but the backend sends a username', inject([AuthGuard, AuthService], (guard: AuthGuard, service: AuthService) => {
-    document.cookie = 'auth=yes; path=/; max-age=1800';
+    document.cookie = 'auth=yes; path=/; max-age=3600';
     guard.username = undefined;
     (<any>service).isAuthenticatedOnBackend = true;
     (<Observable<boolean>>guard.canActivate(<any>{}, <any>{}))
@@ -50,7 +50,7 @@ describe('AuthGuard', () => {
   }));
 
   it('blocks a route if there is a valid auth-cookie, without a username set and the backend throws a 401 (Unauthorized) error', inject([AuthGuard, AuthService], (guard: AuthGuard, service: AuthService) => {
-    document.cookie = 'auth=yes; path=/; max-age=1800';
+    document.cookie = 'auth=yes; path=/; max-age=3600';
     guard.username = undefined;
     (<any>service).isAuthenticatedOnBackend = false;
     (<Observable<boolean>>guard.canActivate(<any>{}, <any>{}))

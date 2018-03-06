@@ -60,7 +60,7 @@ export class AuthService {
       .pipe(
         map(res => {
           if (res.authUser === true) {
-            document.cookie = 'auth=yes; path=/; max-age=1800';
+            document.cookie = 'auth=yes; path=/; max-age=3600';
             this._username.next(user.username);
             const routeAndQueryParams = this.routeAndQueryParams(this.redirectUrl);
             this.router.navigate([routeAndQueryParams[0]], routeAndQueryParams[1]);

@@ -35,7 +35,7 @@ describe('NotLoggedInGuard', () => {
   });
 
   it('blocks a route if there is a valid auth-cookie (which means the user is logged in; note: this guard is used to test if the user can navigate to the login and signup pages)', () => {
-    document.cookie = 'auth=yes; path=/; max-age=1800';
+    document.cookie = 'auth=yes; path=/; max-age=3600';
     const spy = spyOn(router, 'navigate');
     (<boolean>guard.canActivate(<any>{}, <any>{}));
     expect(spy).toHaveBeenCalledWith(['/']);

@@ -32,11 +32,13 @@ export class AuthGuard implements CanActivate {
       return false;
     }
     if (this.username) {
+      document.cookie = 'auth=yes; path=/; max-age=3600'; // refresh cookie
       return true;
     }
     return this.authService.getUsername()
       .pipe(
         map(username => {
+          document.cookie = 'auth=yes; path=/; max-age=3600'; // refresh cookie
           this.username = username;
           return true;
         }),

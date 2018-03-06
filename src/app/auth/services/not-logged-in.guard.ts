@@ -19,6 +19,7 @@ export class NotLoggedInGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const cookies = cookie.parse(document.cookie);
     if (cookies.auth && cookies.auth === 'yes') {
+      document.cookie = 'auth=yes; path=/; max-age=3600'; // refresh cookie
       this.router.navigate(['/']);
       return false;
     }
