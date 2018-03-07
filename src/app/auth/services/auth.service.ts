@@ -93,11 +93,6 @@ export class AuthService {
 
   public clearUsername() {
     this._username.next(undefined);
-    // When we clear the username, make sure we're logged out at the backend too.
-    this.http.get<LogoutResponse>(this.backendUrl + '/auth/logout', {
-      headers: this.headers
-    })
-      .subscribe(() => { });
   }
 
   private routeAndQueryParams(url: string) {
