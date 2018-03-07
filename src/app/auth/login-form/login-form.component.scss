@@ -11,6 +11,13 @@
   margin: 0 auto;
   padding-bottom: 16px;
 }
+.signup-alert {
+  max-width: 500px;
+  margin: 16px auto;
+  a {
+    font-weight: bold;
+  }
+}
 input {
   font-family: Tahoma, Geneva, sans-serif;
 }
