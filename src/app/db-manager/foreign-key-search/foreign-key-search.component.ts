@@ -28,6 +28,7 @@ export class ForeignKeySearchComponent implements OnInit {
   suggestedChildren$: Observable<Poet[] | Bundle[]>;
   selectedChild: Poet | Bundle;
   dbError = false;
+  showSearch = false;
 
   constructor(
     private fb: FormBuilder,
@@ -81,11 +82,20 @@ export class ForeignKeySearchComponent implements OnInit {
   selectChild(child: Poet | Bundle) {
     this.onForeignKeyChange.emit(child);
     this.selectedChild = child;
-    this.searchChildForm.reset();
+    this.hideSearchInput();
   }
 
   removeSelectedChild() {
     this.selectedChild = undefined;
+    this.showSearch = true;
   }
 
+  showSearchInput() {
+    this.showSearch = true;
+  }
+
+  hideSearchInput() {
+    this.showSearch = false;
+    this.searchChildForm.reset();
+  }
 }

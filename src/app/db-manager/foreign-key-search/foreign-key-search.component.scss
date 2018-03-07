@@ -4,3 +4,16 @@
 .bold {
   font-weight: bold;
 }
+.light-gray{
+  color: #aaa;
+}
+.search-container {
+  display: flex;
+  justify-content: space-between;
+}
+.search-tool {
+  flex: 0 1 100%;
+}
+.hide-search-button {
+  flex: 0 0 60px;
+}

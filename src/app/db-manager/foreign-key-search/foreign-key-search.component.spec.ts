@@ -60,13 +60,13 @@ describe('ForeignKeySearchComponent', () => {
   it('when the user types a query in the form\'s input field, the corresponding children are retreived by the DbManagerService\'s queryChildren method and displayed in a list', async(() => {
     foreignKeySearchComponent.removeSelectedChild();
     fixture.detectChanges();
-    let suggestedItems = el.querySelectorAll('.suggested-children');
+    let suggestedItems = el.querySelectorAll('li');
     expect(suggestedItems.length).toBe(0);
     foreignKeySearchComponent.suggestedChildren$.subscribe(children => {
       fixture.detectChanges();
-      suggestedItems = el.querySelectorAll('.suggested-children');
+      suggestedItems = el.querySelectorAll('li');
       expect(suggestedItems.length).toBe(2);
-      expect(suggestedItems[0].textContent).toBe('poet13');
+      expect(suggestedItems[0].textContent).toBe('poet13'); // suggestedChildren are provided by MockDbManagerService
     })
     foreignKeySearchComponent.searchChildForm.setValue({ query: 'poet' });
   }));
@@ -77,16 +77,13 @@ describe('ForeignKeySearchComponent', () => {
     const spy = spyOn(hostcomponent, 'onForeignKeyChange');
     foreignKeySearchComponent.suggestedChildren$.subscribe(children => {
       fixture.detectChanges();
-      const secondSuggestedChild = de.queryAll(By.css('.suggested-children'))[1];
-      if (!secondSuggestedChild) {
-        return; // Because after the triggerEventHandler below, the form will be reset and the suggested-children-list then is empty.
-      }
+      const secondSuggestedChild = de.queryAll(By.css('li'))[1];
       secondSuggestedChild.triggerEventHandler('click', null);
-      fixture.detectChanges();
+      fixture.detectChanges(); console.log(el)
       const selectedChild = el.querySelector('.selected-child');
       expect(selectedChild.textContent).toContain('poet 14');
-      expect(spy).toHaveBeenCalledWith({id: 14, name: 'poet 14'});
-    })
+      expect(spy).toHaveBeenCalledWith({id: 14, name: 'poet 14'}); // suggestedChildren are provided by MockDbManagerService
+    });
     foreignKeySearchComponent.searchChildForm.setValue({ query: 'poet' });
   }));
 
