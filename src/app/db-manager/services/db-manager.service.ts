@@ -64,7 +64,7 @@ export class DbManagerService {
       );
   }
 
-  createOrUpdateListItem(listType: string, listItem: ListItem): Observable<boolean> {
+  createOrUpdateListItem(listType: string, listItem: ListItem): Observable<boolean | {}> {
     const options = {
       headers: this.headers,
       params: new HttpParams()
@@ -74,21 +74,13 @@ export class DbManagerService {
       return this.http.post<ListItem>(this.backendUrl + '/manager/create', listItem, options)
         .pipe(
           tap(res => this.listItemsStore.dispatch({ type: ADD, data: [res] })),
-          map(() => true),
-          catchError(error => {
-            console.log(error);
-            return of(false);
-          })
+          map(() => true)
         )
     } else {
       return this.http.put<ListItem>(this.backendUrl + '/manager/update', listItem, options)
         .pipe(
           tap(res => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
-          map(() => true),
-          catchError(error => {
-            console.log(error);
-            return of(false);
-          })
+          map(() => true)
         );
     }
   }

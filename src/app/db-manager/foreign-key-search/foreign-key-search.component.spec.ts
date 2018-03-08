@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup, FormControlName } from '@angular/forms'
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -34,7 +34,8 @@ describe('ForeignKeySearchComponent', () => {
       declarations: [ForeignKeySearchComponent, TestHostComponent],
       providers: [
       { provide: DbManagerService, useClass: MockDbManagerService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   }));
 

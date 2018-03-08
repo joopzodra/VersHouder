@@ -90,16 +90,6 @@ describe('DbManagerService', () => {
     req.flush([1]);
   });
 
-  it('createOrUpdateListItem handles backend errors, it then return an of(false) observable', () => {
-    service.createOrUpdateListItem(stubListType, { id: 1, text: 'an updated poem' })
-      .subscribe(res => {
-        expect(res).toBe(false)
-      });
-    const requestParams = '?table=' + stubListType;
-    const req = httpMock.expectOne(service['backendUrl'] + '/manager/update' + requestParams);
-    req.flush('errormessage', { status: 500, statusText: 'Database error' });
-  });
-
   it('deleteListItem method sends a request to the backend, receives a response, sends true to its subscribers and calls ListItemStore\'s dispatch method with the ListItem', () => {
     const spy = spyOn(listItemsStore, 'dispatch');
     service.deleteListItem(stubListType, { id: 1, text: 'a poem' })
