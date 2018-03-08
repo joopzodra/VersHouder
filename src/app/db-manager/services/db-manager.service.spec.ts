@@ -9,8 +9,8 @@ import { PoemsListItem } from '../../models/list-items';
 import { Poet } from '../../models/foreign-key-children';
 
 const stubListType = 'poems';
-const stubQuery = { query: '', searchFor: 'text', maxItemsPerPage: '100' };
-const stubRequestParams = '?queryString=&table=poems&column=text&maxItems=100'
+const stubQuery = { query: '', searchFor: 'text', maxItemsPerPage: '100', offset: '0' };
+const stubRequestParams = '?queryString=&table=poems&column=text&maxItems=100&offset=0'
 const stubListItems: PoemsListItem[] = [{ id: 1, text: 'text poem1' }, { id: 2, text: 'text poem2' }];
 const stubForeignKeyType = 'poets';
 const stubPoet = { name: 'poet' };
