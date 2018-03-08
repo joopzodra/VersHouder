@@ -1,3 +1,12 @@
 input:nth-child(n+2){
   margin-left: 8px;
 }
+#page-buttons {
+  overflow: hidden;
+}
+#next-page-button {
+  float: right;
+}
+button.invisible {
+  visibility: hidden; // Button's purpose is to keep the height of the container div when other buttons are removed from DOM by *ngIf
+}

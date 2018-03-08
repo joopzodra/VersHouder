@@ -43,7 +43,7 @@ export class DbManagerService {
     this._searching.next(false);
   }
 
-  getListItems(listType: string, formValue: { query: string, searchFor: string, maxItemsPerPage: string }): void {
+  getListItems(listType: string, formValue: { query: string, searchFor: string, maxItemsPerPage: string, offset: string }): void {
     this._remoteError.next(undefined);
     this.listItemsStore.dispatch({ type: LOAD, data: [] });
     const options = {
@@ -51,7 +51,8 @@ export class DbManagerService {
         .set('queryString', formValue.query.trim())
         .set('table', listType)
         .set('column', formValue.searchFor)
-        .set('maxItems', formValue.maxItemsPerPage),
+        .set('maxItems', formValue.maxItemsPerPage)
+        .set('offset', formValue.offset),
       headers: this.headers
     }
     this.http.get<ListItem[]>(this.backendUrl + '/manager/find-all', options)

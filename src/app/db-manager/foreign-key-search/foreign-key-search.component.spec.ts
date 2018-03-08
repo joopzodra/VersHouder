@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormGroup, FormControlName } from '@angular/forms'
 import { Component, DebugElement, ViewChild, NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { first } from 'rxjs/operators';
 
 import { ForeignKeySearchComponent } from './foreign-key-search.component';
 import { DbManagerService } from '../services/db-manager.service';
@@ -76,11 +77,15 @@ describe('ForeignKeySearchComponent', () => {
     foreignKeySearchComponent.removeSelectedChild();
     fixture.detectChanges();
     const spy = spyOn(hostcomponent, 'onForeignKeyChange');
-    foreignKeySearchComponent.suggestedChildren$.subscribe(children => {
+    foreignKeySearchComponent.suggestedChildren$
+    .pipe(
+      first()
+      )
+    .subscribe(children => {
       fixture.detectChanges();
-      const secondSuggestedChild = de.queryAll(By.css('li'))[1];
+      const secondSuggestedChild = de.queryAll(By.css('li'))[1]; console.log(secondSuggestedChild)
       secondSuggestedChild.triggerEventHandler('click', null);
-      fixture.detectChanges(); console.log(el)
+      fixture.detectChanges();
       const selectedChild = el.querySelector('.selected-child');
       expect(selectedChild.textContent).toContain('poet 14');
       expect(spy).toHaveBeenCalledWith({id: 14, name: 'poet 14'}); // suggestedChildren are provided by MockDbManagerService
