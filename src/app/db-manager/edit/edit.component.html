@@ -116,6 +116,8 @@
       <p>Er is een probleem met de database. Je gegevens zijn niet opgeslagen.</p>
       <button class="w3-button w3-blue w3-section" (click)="hideRemoteErrorMessage()">OK</button>
     </div>
-    
+
+    <jr-alert-401 *ngIf="authError"></jr-alert-401>
+
   </div>
 </div>

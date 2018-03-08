@@ -19,6 +19,7 @@ import { EditComponent } from './db-manager/edit/edit.component';
 import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
 import { ShowErrorComponent } from './db-manager/show-error/show-error.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { Alert401Component } from './db-manager/alert-401/alert-401.component';
 
 import { DbManagerService } from './db-manager/services/db-manager.service';
 import { ListItemsStore } from './db-manager/services/list-items.store';
@@ -40,6 +41,7 @@ import { HideComponentsService } from './db-manager/services/hide-components.ser
     ForeignKeySearchComponent,
     ShowErrorComponent,
     PageNotFoundComponent,
+    Alert401Component,
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { ListItem, PoemsListItem, PoetsListItem, BundlesListItem } from '../../models/list-items';
 import { ListItemsStore } from '../services/list-items.store';
@@ -39,6 +40,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
   askDeleteConfirmationDisplay = 'none';
   remoteError = false;
+  authError = false;
 
   _listType: string;
   @Input()
@@ -131,13 +133,10 @@ export class EditComponent implements OnInit, OnDestroy {
   onSubmit(formValue: any) {
     const editedItem = Object.assign(this.listItem, formValue);
     this.dbManagerService.createOrUpdateListItem(this.listType, editedItem)
-      .subscribe(succes => {
-        if (succes) {
-          this.editService.pushListItemId(-1);
-        } else {
-          this.remoteError = true;
-        }
-      });
+      .subscribe(
+        succes => this.editService.pushListItemId(-1),
+        error => this.handleError(error)
+      );
   }
 
   hideRemoteErrorMessage() {
@@ -161,14 +160,21 @@ export class EditComponent implements OnInit, OnDestroy {
 
   deleteListItem() {
     this.dbManagerService.deleteListItem(this.listType, this.listItem)
-      .subscribe(succes => {
-        if (succes) {
-          this.editService.pushListItemId(-1);
-        } else {
-          this.remoteError = true;
-        }
-      });
+      .subscribe(
+        succes => this.editService.pushListItemId(-1),
+        error => this.handleError(error)
+      );
     return false;
+  }
+
+  handleError(error: HttpErrorResponse) {
+    console.log(error);
+    if (error.status === 401) {
+      this.authError = true;
+    }
+    else {
+      this.remoteError = true;
+    }
   }
 
   // onForeignKeyChange is triggered by the ForeignKeySearch child components.
