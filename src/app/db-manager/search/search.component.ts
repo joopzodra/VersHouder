@@ -7,6 +7,7 @@ import { debounceTime, tap, map } from 'rxjs/operators';
 
 import { DbManagerService } from '../services/db-manager.service';
 import { HideComponentsService } from '../services/hide-components.service';
+import { PageButtonsService } from '../services/page-buttons.service';
 import { ListItemsStore } from '../services/list-items.store';
 
 /* The SearchComponent offers a seach field (html input element) by which the user can search for listItems (poems, poets or bundles).
@@ -27,7 +28,7 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
   searchFormSubscription: Subscription;
   searching: EventEmitter<boolean>;
   hide$: Observable<boolean>;
-  maxItemsPerPage = 50;
+  maxItemsPerPage = 10;
   previousOffset = 0;
   offset = 0;
   itemsCount: number;
@@ -37,12 +38,13 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
     private dbManagerService: DbManagerService,
     private fb: FormBuilder,
     private hideComponentsService: HideComponentsService,
+    private pageButtonService: PageButtonsService,
     private listItemStore: ListItemsStore
   ) {
     this.searchForm = fb.group({
       searchFor: [this.defaultSearchFor],
       query: [''],
-      maxItemsPerPage: ['50'],
+      maxItemsPerPage: ['10'],
       offset: ['0']
     })
   }
@@ -69,15 +71,25 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
         this.maxItemsPerPage = +formValue.maxItemsPerPage;
       });
     this.searchForm.patchValue({ searchFor: this.defaultSearchFor() });
+
     this.listItemStore.listItems$.subscribe(items => {
       this.itemsCount = items.length;
-      this.pageButtonsVisible = true;
+      this.pushPageButtonsData(true);
     });
+
     this.hide$ = this.hideComponentsService.hide$;
+    this.pageButtonService.pageAction$
+      .subscribe((action: 'previous' | 'next') => {
+        if (action === 'next') {
+          this.nextPage();
+        } else {
+          this.previousPage();
+        }
+      });
   }
 
   ngOnChanges() {
-    this.searchForm.reset({ searchFor: this.defaultSearchFor(), query: '', maxItemsPerPage: '50', offset: '0' });
+    this.searchForm.reset({ searchFor: this.defaultSearchFor(), query: '', maxItemsPerPage: '10', offset: '0' });
   }
 
   defaultSearchFor() {
@@ -92,17 +104,26 @@ export class SearchComponent implements OnChanges, OnDestroy, OnChanges {
   }
 
   previousPage() {
-    this.pageButtonsVisible = false;
+    this.pushPageButtonsData(false);
     this.previousOffset = this.offset;
     this.offset -= this.maxItemsPerPage;
     this.searchForm.patchValue({ offset: this.offset });
   }
 
   nextPage() {
-    this.pageButtonsVisible = false;
+    this.pushPageButtonsData(false);
     this.previousOffset = this.offset;
     this.offset += this.maxItemsPerPage;
     this.searchForm.patchValue({ offset: this.offset });
+  }
+
+  pushPageButtonsData(showContainer: boolean) {
+    const pageButtonsData = {
+      showContainer: showContainer,
+      showPreviousButton: this.offset ? true : false,
+      showNextButton: this.itemsCount < this.maxItemsPerPage ? false : true
+    };
+    this.pageButtonService.pushPageButtonsData(pageButtonsData);
   }
 
   ngOnDestroy() {

@@ -41,12 +41,4 @@
 
   </form>
 
-  <div id="page-buttons" class="w3-margin-top">
-    <ng-container *ngIf="pageButtonsVisible">
-      <button [ngStyle]="{'visibility': offset ? 'visible' : 'hidden'}" class="w3-button w3-small w3-padding-small w3-gray" (click)="previousPage()">Vorige pagina</button>
-      <button id="next-page-button" [ngStyle]="{'visibility': itemsCount < maxItemsPerPage ? 'hidden' : 'visible'}" class="w3-button w3-small w3-padding-small w3-gray" (click)="nextPage()">Volgende pagina</button>
-    </ng-container>
-    <button class="w3-button w3-small w3-padding-small invisible"></button>
-  </div>
-
 </div>

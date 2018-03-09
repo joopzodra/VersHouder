@@ -20,11 +20,13 @@ import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
 import { ShowErrorComponent } from './db-manager/show-error/show-error.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { Alert401Component } from './db-manager/alert-401/alert-401.component';
+import { PageButtonsComponent } from './db-manager/page-buttons/page-buttons.component';
 
 import { DbManagerService } from './db-manager/services/db-manager.service';
 import { ListItemsStore } from './db-manager/services/list-items.store';
 import { ForeignKeySearchComponent } from './db-manager/foreign-key-search/foreign-key-search.component';
 import { HideComponentsService } from './db-manager/services/hide-components.service';
+import { PageButtonsService } from './db-manager/services/page-buttons.service';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { HideComponentsService } from './db-manager/services/hide-components.ser
     ShowErrorComponent,
     PageNotFoundComponent,
     Alert401Component,
+    PageButtonsComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,8 @@ import { HideComponentsService } from './db-manager/services/hide-components.ser
     Title,
     DbManagerService,
     ListItemsStore,
-    HideComponentsService
+    HideComponentsService,
+    PageButtonsService
   ],
   bootstrap: [AppComponent]
 })

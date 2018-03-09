@@ -1,0 +1,7 @@
+<div id="page-buttons" class="w3-margin-bottom w3-container">
+  <ng-container *ngIf="showContainer">
+    <button [ngStyle]="{'visibility': showPreviousButton ? 'visible' : 'hidden'}" class="w3-button w3-small w3-padding-small w3-theme" (click)="previousPage()">Vorige pagina</button>
+    <button id="next-page-button" [ngStyle]="{'visibility': showNextButton ? 'visible' : 'hidden'}" class="w3-button w3-small w3-padding-small w3-theme" (click)="nextPage()">Volgende pagina</button>
+  </ng-container>
+  <button class="w3-button w3-small w3-padding-small invisible"></button>
+</div>
