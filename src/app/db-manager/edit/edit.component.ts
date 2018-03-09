@@ -23,119 +23,122 @@ import { urlValidator, urlLabelValidator } from '../../app-validators';
  * If the id === -1, it means the form must be hidden. The id === -1 is triggered by the EditComponent itself, by its onSubmit method.
  */
 
-@Component({
-  selector: 'jr-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
-})
-export class EditComponent implements OnInit, OnDestroy {
+ @Component({
+   selector: 'jr-edit',
+   templateUrl: './edit.component.html',
+   styleUrls: ['./edit.component.scss']
+ })
+ export class EditComponent implements OnInit, OnDestroy {
 
-  editForm: FormGroup;
-  listItem: ListItem;
-  listItemSubscription: Subscription;
-  headerInfo = {
-    'poems': 'Gedicht',
-    'poets': 'Dichter',
-    'bundles': 'Bundel'
-  }
-  askDeleteConfirmationDisplay = 'none';
-  remoteError = false;
-  authError = false;
+   editForm: FormGroup;
+   listItem: ListItem;
+   listItemSubscription: Subscription;
+   headerInfo = {
+     'poems': 'Gedicht',
+     'poets': 'Dichter',
+     'bundles': 'Bundel'
+   }
+   askDeleteConfirmationDisplay = 'none';
+   remoteError = false;
+   authError = false;
 
-  _listType: string;
-  @Input()
-  set listType(listType: string) {
-    this._listType = listType;
-    this.buildForm(this.fb);
-  };
-  get listType(): string {
-    return this._listType;
-  }
+   _listType: string;
+   @Input()
+   set listType(listType: string) {
+     this._listType = listType;
+     this.buildForm(this.fb);
+   };
+   get listType(): string {
+     return this._listType;
+   }
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private titleService: Title,
-    private fb: FormBuilder,
-    private listItemsStore: ListItemsStore,
-    private dbManagerService: DbManagerService,
-    private location: Location,
-    private editService: EditService,
-    private router: Router
-  ) { }
+   constructor(
+     private activatedRoute: ActivatedRoute,
+     private titleService: Title,
+     private fb: FormBuilder,
+     private listItemsStore: ListItemsStore,
+     private dbManagerService: DbManagerService,
+     private location: Location,
+     private editService: EditService,
+     private router: Router
+     ) { }
 
-  ngOnInit() {
-    const title = this.activatedRoute.snapshot.data['title'];
-    this.titleService.setTitle(title);
+   ngOnInit() {
+     const title = this.activatedRoute.snapshot.data['title'];
+     this.titleService.setTitle(title);
 
-    const id$ = this.editService.listItemId$;
-    const listItems$ = this.listItemsStore.listItems$;
-    this.listItemSubscription = combineLatest(id$, listItems$).subscribe(([id, listItems]) => {
-      if (id === -1) {
-        this.hideForm()
-        return;
-      }
-      if (id === 0) {
-        this.listItem = this.newListItem();
-      } else {
-        this.listItem = listItems.filter(listItem => listItem.id === id)[0];
-      }
-      this.editForm.patchValue(this.listItem);
-    });
-  }
+     const id$ = this.editService.listItemId$;
+     const listItems$ = this.listItemsStore.listItems$;
+     this.listItemSubscription = combineLatest(id$, listItems$).subscribe(([id, listItems]) => {
+       if (id === -1) {
+         this.hideForm()
+         return;
+       }
+       if (id === 0) {
+         this.listItem = this.newListItem();
+       } else {
+         this.listItem = listItems.filter(listItem => listItem.id === id)[0];
+       }
+       // After deleting the listItems.filter(...) results in an undefined this.listItem, on which editForm.patchValue throws, so we test if we have a listItem.
+       if (this.listItem) {
+         this.editForm.patchValue(this.listItem);         
+       }
+     });
+   }
 
-  buildForm(fb: FormBuilder) {
-    switch (this.listType) {
-      case 'poems':
-        this.editForm = fb.group({
-          text: ['', [Validators.maxLength(30000), Validators.required]],
-          title: '',
-          poet_id: '',
-          poet_name: '',
-          bundle_id: '',
-          bundle_title: '',
-          url: ['', urlValidator],
-          url_label: '',
-          comment: ''
-        },
-          { validator: urlLabelValidator }
-        );
-        break;
-      case 'poets':
-        this.editForm = fb.group({
-          name: ['', Validators.required],
-          born: ['', Validators.pattern(/^\d{4}$/)],
-          died: ['', Validators.pattern(/^\d{4}$/)]
-        });
-        break;
-      case 'bundles':
-        this.editForm = fb.group({
-          title: ['', Validators.required],
-          year: ['', Validators.pattern(/^\d{4}$/)],
-          poet_id: '',
-          poet_name: ''
-        });
-        break;
-    }
-  }
+   buildForm(fb: FormBuilder) {
+     switch (this.listType) {
+       case 'poems':
+       this.editForm = fb.group({
+         text: ['', [Validators.maxLength(30000), Validators.required]],
+         title: '',
+         poet_id: '',
+         poet_name: '',
+         bundle_id: '',
+         bundle_title: '',
+         url: ['', urlValidator],
+         url_label: '',
+         comment: ''
+       },
+       { validator: urlLabelValidator }
+       );
+       break;
+       case 'poets':
+       this.editForm = fb.group({
+         name: ['', Validators.required],
+         born: ['', Validators.pattern(/^\d{4}$/)],
+         died: ['', Validators.pattern(/^\d{4}$/)]
+       });
+       break;
+       case 'bundles':
+       this.editForm = fb.group({
+         title: ['', Validators.required],
+         year: ['', Validators.pattern(/^\d{4}$/)],
+         poet_id: '',
+         poet_name: ''
+       });
+       break;
+     }
+   }
 
-  newListItem(): ListItem {
+   newListItem(): ListItem {
     // Returns an empty listItem
     switch (this.listType) {
       case 'poems':
-        return { text: '' }
+      return { text: '' }
       case 'poets':
-        return { name: '' }
+      return { name: '' }
       case 'bundles':
-        return { title: '' }
+      return { title: '' }
     }
   }
 
   onSubmit(formValue: any) {
     const editedItem = Object.assign(this.listItem, formValue);
     this.dbManagerService.createOrUpdateListItem(this.listType, editedItem)
-      .subscribe(
-        succes => this.editService.pushListItemId(-1),
-        error => this.handleError(error)
+    .subscribe(
+      succes => this.editService.pushListItemId(-1),
+      error => this.handleError(error)
       );
   }
 
@@ -160,9 +163,9 @@ export class EditComponent implements OnInit, OnDestroy {
 
   deleteListItem() {
     this.dbManagerService.deleteListItem(this.listType, this.listItem)
-      .subscribe(
-        succes => this.editService.pushListItemId(-1),
-        error => this.handleError(error)
+    .subscribe(
+      succes => {},
+      error => this.handleError(error)
       );
     return false;
   }

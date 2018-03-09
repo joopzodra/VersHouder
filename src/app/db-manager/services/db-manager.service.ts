@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { BACKEND_URL, URL } from '../../app-tokens';
@@ -65,6 +65,16 @@ export class DbManagerService {
       );
   }
 
+  getListItemById(listType: string, itemId: string): Observable<ListItem> {
+    const options = {
+      headers: this.headers,
+      params: new HttpParams()
+        .set('table', listType)
+        .set('itemId', itemId)
+    };
+    return this.http.get<ListItem>(this.backendUrl + '/manager/find-by-id', options);
+  }
+
   createOrUpdateListItem(listType: string, listItem: ListItem): Observable<boolean | {}> {
     const options = {
       headers: this.headers,
@@ -74,6 +84,7 @@ export class DbManagerService {
     if (!listItem.id) {
       return this.http.post<ListItem>(this.backendUrl + '/manager/create', listItem, options)
         .pipe(
+          mergeMap(res => this.getListItemById(listType, res.id.toString())),
           tap(res => this.listItemsStore.dispatch({ type: ADD, data: [res] })),
           map(() => true)
         )
@@ -130,7 +141,7 @@ export class DbManagerService {
         .set('table', foreignKeyType),
       headers: this.headers
     }
-    return this.http.get<Poet | Bundle>(this.backendUrl + '/manager/find-by-id', options);
+    return this.http.get<Poet | Bundle>(this.backendUrl + '/manager/find-child-by-id', options);
   }
 
 }

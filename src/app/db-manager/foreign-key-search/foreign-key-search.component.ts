@@ -106,6 +106,6 @@ export class ForeignKeySearchComponent implements OnInit {
 
   hideSearchInput() {
     this.showSearch = false;
-    this.searchChildForm.reset();
+    this.searchChildForm.setValue({query: ''});
   }
 }

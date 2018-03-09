@@ -20,8 +20,9 @@
         <input class="w3-input w3-border" type="text" formControlName="query" placeholder="zoek...">
       </form>
 
-      <ul class="w3-ul w3-hoverable serif">
-        <li *ngFor="let child of suggestedChildren$ | async" (click)="selectChild(child)">{{showChild(child)}}</li>
+      <ul *ngIf="suggestedChildren$ | async, let suggestedChildren" class="w3-ul w3-hoverable serif">
+        <li *ngFor="let child of suggestedChildren" (click)="selectChild(child)">{{showChild(child)}}</li>
+        <li *ngIf="suggestedChildren.length === 0">Geen {{foreignKeyType === 'poets' ? 'dichter' : 'bundel'}} gevonden</li>
       </ul>
 
       <p *ngIf="dbError" class="w3-text-red">Kan de 

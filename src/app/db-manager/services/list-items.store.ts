@@ -25,7 +25,7 @@ export class ListItemsStore {
       case LOAD:
         return [...action.data];
       case ADD:
-        return [...listItems, action.data[0]]
+        return listItems.concat(action.data);
       case EDIT:
         return listItems.map(listItem => {
           const editedListItem = action.data[0];
@@ -35,7 +35,7 @@ export class ListItemsStore {
           return editedListItem;
         });
       case REMOVE:
-        return listItems.filter(listItem => listItem.id !== action.data[0].id)
+        return listItems.filter(listItem => listItem.id !== action.data[0].id);
       default:
         return listItems;
     }
