@@ -1,6 +1,12 @@
+$max-width: 1000px;
+
 #page-buttons {
   overflow: hidden;
+  padding-bottom: 16px;
+  max-width: $max-width - 32px;
+  margin: 0 auto;
 }
+
 #next-page-button {
   float: right;
 }
