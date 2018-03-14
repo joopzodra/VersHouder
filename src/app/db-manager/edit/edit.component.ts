@@ -15,7 +15,8 @@ import { EditService } from '../services/edit.service';
 import { Poet, Bundle } from '../../models/foreign-key-children';
 import { urlValidator, urlLabelValidator } from '../../app-validators';
 
-/* The EditComponent offers the user a form to edit a poem, poet or bundle, or to create a new one.
+/**
+ * The EditComponent offers the user a form to edit a poem, poet or bundle, or to create a new one.
  * The EditComponent is hosted by the PoemItemComponent, PoetsListComponent and BundlesComponent.
  * Which formfields the form contains, is determined by the listType input binding.
  * The EditComponent prefills the form with data it receives from the ListItemStore. This data is based on the id of the poem, poet or bundle which the EditComponent receives from the EditService.

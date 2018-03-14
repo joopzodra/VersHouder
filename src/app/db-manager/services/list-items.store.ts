@@ -3,7 +3,8 @@ import { Injectable, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Subject'
 import { ListItem } from '../../models/list-items';
 
-/* The ListItemStore is a redux store for ListItem data (poems, poets, bundles).
+/**
+ * The ListItemStore is a redux store for ListItem data (poems, poets, bundles).
  * It receives data from the DbManagerService.
  */
 

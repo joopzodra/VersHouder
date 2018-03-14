@@ -8,7 +8,8 @@ import { ListItemsStore } from '../services/list-items.store';
 import { BundlesListItem } from '../../models/list-items';
 import { EditService } from '../services/edit.service';
 
-/* The BundlesListComponent shows a list with bundles.
+/**
+ * The BundlesListComponent shows a list with bundles.
  * It receives the bundles from the ListItemsStore.
  * (Which bundles it receives, is determined by the SearchComponent.)
  * It hosts an EditComponent, to which it offers the listType property by an input binding.

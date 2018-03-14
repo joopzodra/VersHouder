@@ -11,7 +11,8 @@ import { PoemsListItem } from '../../models/list-items';
 import { EditService } from '../services/edit.service';
 import { HideComponentsService } from '../services/hide-components.service';
 
-/* The PoemsListComponent shows a list with poems.
+/**
+ * The PoemsListComponent shows a list with poems.
  * It receives the poems from the ListItemsStore.
  * (Which poems it receives, is determined by the SearchComponent.)
  * It's showPoem method navigates the user to the PoemItemComponent, which will show the selected poem.

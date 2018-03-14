@@ -5,7 +5,8 @@ import { filter } from 'rxjs/operators';
 
 import { EditService } from './services/edit.service';
 
-/* The DbManagerComponent is the parentcomponent of:
+/**
+ * The DbManagerComponent is the parentcomponent of:
  *  - the NavigationComponent,
  *  - the SearchComponent,
  *  - the routeroutlet (for the PoemsListComponent, PoetsListComponent and BundleListComponent).

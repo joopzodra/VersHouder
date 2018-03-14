@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
-/* The NavigationComponent shows the navigation links for the DbManager.
+/**
+ * The NavigationComponent shows the navigation links for the DbManager.
  * It contains no logic.
  */
 

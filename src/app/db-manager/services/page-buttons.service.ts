@@ -3,6 +3,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { PageButtonsData } from '../../models/page-buttons-data'
 
+/**
+ * The PageButtonsService handles the communication from the SearchComponent to the PageButtonsComponent.
+ * It receives data about which page buttons to show or hide from the SearchComponent and pushes these to the PageButtonsComponent.
+ */
+
 @Injectable()
 export class PageButtonsService {
 

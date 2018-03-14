@@ -8,7 +8,8 @@ import { ListItemsStore } from '../services/list-items.store';
 import { PoetsListItem } from '../../models/list-items';
 import { EditService } from '../services/edit.service';
 
-/* The PoetsListComponent shows a list with poets.
+/**
+ * The PoetsListComponent shows a list with poets.
  * It receives the poets from the ListItemsStore.
  * (Which poets it receives, is determined by the SearchComponent.)
  * It hosts an EditComponent, to which it offers the listType property by an input binding.

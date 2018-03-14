@@ -7,7 +7,8 @@ import * as cookie from 'cookie';
 
 import { AuthService } from './auth.service';
 
-/* Allows a user to pass only if a username has been set. It handles three posibilities:
+/**
+ * Allows a user to pass only if a username has been set. It handles three posibilities:
  * 1. There is no auth-cookie. This cookie is set by the app after login. If it's not set, the user is not logged in, hence no username. The user is refused to pass the guard.
  * 2. There is a username. User can pass the guard.
  * 3. There is an auth-cookie but no username. This happens when a logged in user opens a new browser tab or window. Then a new instance of the app is created, in which no username is set yet. The guard requests the username from the backend via AuthService's getUsername method.

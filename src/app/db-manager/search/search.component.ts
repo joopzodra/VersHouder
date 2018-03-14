@@ -10,10 +10,12 @@ import { HideComponentsService } from '../services/hide-components.service';
 import { PageButtonsService } from '../services/page-buttons.service';
 import { ListItemsStore } from '../services/list-items.store';
 
-/* The SearchComponent offers a seach field (html input element) by which the user can search for listItems (poems, poets or bundles).
+/**
+ * The SearchComponent offers a seach field (html input element) by which the user can search for listItems (poems, poets or bundles).
  * When the user types a search term, a query is sent to the DbManagerService's getListItems method.
  * The user can select in which column of the listItems table he wants to search (this value is set in the searchFor formcontrol).
  * The user can also select the maximum number of listItems per page.
+ * The SearchComponent also decides if the next and/or previous page buttons should be shown. It pushes the decision to the PageButtonsService, which pushes it to the PageButtonsComponent.
  */
 
 @Component({

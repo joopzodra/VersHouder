@@ -9,7 +9,8 @@ import * as cookie from 'cookie';
 import { User } from '../../models/user';
 import { BACKEND_URL, URL } from '../../app-tokens';
 
-/* The AuthService sents requests to and receives responses from the backend, concerning the user authentication.
+/**
+ * The AuthService sents requests to and receives responses from the backend, concerning the user authentication.
  * The service is used by the LoginFormComponent, SignupComponent and UserBadgeAndLogoutComponent.
  * It pushes the current username, if any, to subscribers.
  * It also exposes a method to retrieve the current username from the backend, to be used by routing guards. 

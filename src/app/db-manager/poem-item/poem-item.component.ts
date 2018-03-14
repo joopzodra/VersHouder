@@ -11,7 +11,8 @@ import { ListItemsStore } from '../services/list-items.store';
 import { EditService } from '../services/edit.service';
 import { HideComponentsService } from '../services/hide-components.service';
 
-/* The PoemItemComponent shows the full text of a poem and some more info about the poem.
+/**
+ * The PoemItemComponent shows the full text of a poem and some more info about the poem.
  * It receives the poem from the ListItemsStore.
  * (Which poem it receives, is determined by the route params.)
  * It hosts an EditComponent, to which it offers the listType property by an input binding.

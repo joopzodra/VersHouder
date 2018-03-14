@@ -1,7 +1,8 @@
 import { Component, Input, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 
-/* The ShowErrorComponent is used as child component on multiple places in the LoginComponent and SignupComponent. It checks the form constantly (due to Angular's change detection) on errors in respect to the form contstaints.
+/**
+ * The ShowErrorComponent is used as child component on multiple places in the LoginComponent and SignupComponent. It checks the form constantly (due to Angular's change detection) on errors in respect to the form contstaints.
  * These constraint are defined in the form definitions in the LoginComponent and SignupComponent.
  * When errors occur, the ShowErrorComponent displays them in it's own template.
  */

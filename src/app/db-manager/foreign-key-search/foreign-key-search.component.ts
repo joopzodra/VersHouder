@@ -8,7 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Poet, Bundle } from '../../models/foreign-key-children';
 import { DbManagerService } from '../services/db-manager.service';
 
-/* The ForeignKeySearchComponent searches poets or bundles in the backend database to be consumend as children by PoemListItems or BundleListItems. These children are used to set new foreign keys for poets or bundles when the user changes these on a ListItem.
+/**
+ * The ForeignKeySearchComponent searches poets or bundles in the backend database to be consumend as children by PoemListItems or BundleListItems. These children are used to set new foreign keys for poets or bundles when the user changes these on a ListItem.
  * When the user types a search query in the input field, the component receives corresponding children – poets or bundles. The user can select one of these to be consumed by the EditComponent.
  * PoemListItems get the author's name and the bundle's title from separate tables in the backend. The same holds for BundleListItems' author's names. Therefore we need this separate search.
  * By keeping author's names and the bundle's titles in separate tables, we don't get accidentally duplicate but misspelled names or titles.

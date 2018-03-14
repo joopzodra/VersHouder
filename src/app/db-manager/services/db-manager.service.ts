@@ -10,7 +10,8 @@ import { ListItem } from '../../models/list-items';
 import { ListItemsStore, LOAD, ADD, EDIT, REMOVE } from './list-items.store';
 import { Poet, Bundle } from '../../models/foreign-key-children';
 
-/* The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
+/**
+ * The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
  * The service receives queries from the SearchComponent.
  * It pushes the responses from the backend as listItems to subscribers.
  * Subscribers are the PoemsListComponent, ....
