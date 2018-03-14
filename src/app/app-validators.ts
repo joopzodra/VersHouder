@@ -10,12 +10,13 @@ export function urlValidator(control: AbstractControl): { [key: string]: any } {
 }
 
 export function urlLabelValidator(formGroup: AbstractControl): { [key: string]: any } {
+
   const urlControl = formGroup.get('url');
   const urlLabelControl = formGroup.get('url_label');
   if (!urlLabelControl.value || urlLabelControl.value === '') {
     return null;
   } else {
-    if (urlControl.value !== '' && urlControl.valid) {
+    if (urlLabelControl.value !== '' && (urlControl.value && urlControl.valid)) {
       return null;
     }
     return { 'invalidUrlLabel': true };
