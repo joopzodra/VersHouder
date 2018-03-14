@@ -164,7 +164,8 @@ import { urlValidator, urlLabelValidator } from '../../app-validators';
   deleteListItem() {
     this.dbManagerService.deleteListItem(this.listType, this.listItem)
     .subscribe(
-      succes => {},
+      // The EditFormComponent is child of the Poems-, Poets- or BundlesListComponent. It survives after deleting a poem. When we then add a new list item, the delete confirmation will show up, so we must hide it.
+      succes => this.hideDeleteConfirmation(),
       error => this.handleError(error)
       );
     return false;

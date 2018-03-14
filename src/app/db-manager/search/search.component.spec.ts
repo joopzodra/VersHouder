@@ -12,6 +12,7 @@ import { MockDbManagerService } from '../../testing/mock-db-manager-service';
 import { SearchComponent } from './search.component';
 import { HideComponentsService } from '../services/hide-components.service';
 import { ListItemsStore } from '../services/list-items.store';
+import { PageButtonsService } from '../services/page-buttons.service';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -27,7 +28,8 @@ describe('SearchComponent', () => {
       providers: [
       { provide: DbManagerService, useClass: MockDbManagerService },
       HideComponentsService,
-      ListItemsStore
+      ListItemsStore,
+      PageButtonsService
       ]
     });
   }));
@@ -65,11 +67,11 @@ describe('SearchComponent', () => {
   it('when the value of the input binding \'listType\' changes (because the user navigated to another list), the form is reset', () => {
     component.listType = 'poems';
     const form = component.searchForm;
-    const stubSearch = { searchFor: 'poems.text', query: 'hi', maxItemsPerPage: '50', offset: '0' };
+    const stubSearch = { searchFor: 'poems.text', query: 'hi', maxItemsPerPage: '10', offset: '0' };
     form.setValue(stubSearch);
     component.listType = 'bundles';
     component.ngOnChanges();
-    const defaultBundlesSearch = { searchFor: 'bundles.title', query: '', maxItemsPerPage: '50', offset: '0' };
+    const defaultBundlesSearch = { searchFor: 'bundles.title', query: '', maxItemsPerPage: '10', offset: '0' };
     expect(form.value).toEqual(defaultBundlesSearch);
   });
 

@@ -73,9 +73,12 @@ describe('DbManagerService', () => {
         expect(res).toBe(true);
         expect(spy).toHaveBeenCalledWith({ type: 'ADD', data: [{ id: 112, text: 'a new poem' }] });
       });
-    const requestParams = '?table=' + stubListType;
-    const req = httpMock.expectOne(service['backendUrl'] + '/manager/create' + requestParams);
-    req.flush({ id: 112, text: 'a new poem' });
+    const requestParams1 = '?table=' + stubListType;
+    const req1 = httpMock.expectOne(service['backendUrl'] + '/manager/create' + requestParams1);
+    req1.flush({id: 10}); // backend response with a stub id
+    const requestParams2 = '?table=' + stubListType + '&itemId=10';
+    const req2 = httpMock.expectOne(service['backendUrl'] + '/manager/find-by-id' + requestParams2);
+    req2.flush({ id: 112, text: 'a new poem' });
   });
 
   it('createOrUpdateListItem method, called with an updated existing ListItem, sends a request to the backend, receives a response, returns true to its subscribers and calls ListItemStore\'s dispatch method with the ListItem', () => {
@@ -118,7 +121,7 @@ describe('DbManagerService', () => {
         expect(res).toEqual(<Poet>stubPoet);
       });
     const requestParams = '?id=1&table=poets';
-    const req = httpMock.expectOne(service['backendUrl'] + '/manager/find-by-id' + requestParams);
+    const req = httpMock.expectOne(service['backendUrl'] + '/manager/find-child-by-id' + requestParams);
     req.flush(stubPoet);
   });
 });

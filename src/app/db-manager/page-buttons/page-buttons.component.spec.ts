@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageButtonsComponent } from './page-buttons.component';
+import { PageButtonsService } from '../services/page-buttons.service';
 
 describe('PageButtonsComponent', () => {
   let component: PageButtonsComponent;
@@ -8,7 +9,8 @@ describe('PageButtonsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PageButtonsComponent ]
+      declarations: [ PageButtonsComponent ],
+      providers: [PageButtonsService]
     })
     .compileComponents();
   }));

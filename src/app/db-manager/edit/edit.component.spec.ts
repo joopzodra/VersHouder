@@ -109,7 +109,7 @@ describe('EditComponent', () => {
     editService.pushListItemId(2);
   }));
 
-  it('onSubmit method calls dbManagerService\'s createOrUpdateListItem method and after a succesfull backend response it emits -1 to the EditService, which causes the form to disappear', () => {
+  it('onSubmit method calls dbManagerService\'s createOrUpdateListItem method and after a succesfull backend response it emits -1 to the EditService, which causes the form to disappear', async(() => {
     hostComponent.listType = 'poems';
     fixture.detectChanges();
     const spy = spyOn(dbManagerService, 'createOrUpdateListItem').and.callThrough();
@@ -122,30 +122,42 @@ describe('EditComponent', () => {
         editComponent.onSubmit(editComponent.editForm.value);
         const editedItem = { id: 2, title: 'title poem2', text: 'edited text', poet_id: '', poet_name: '', bundle_id: '', bundle_title: '', url: '', url_label: '', comment: '' };
         expect(spy).toHaveBeenCalledWith(hostComponent.listType, editedItem);
-        fixture.detectChanges();
-        expect(el.querySelector('form')).toBeFalsy();
       });
     editService.pushListItemId(2);
-  });
+  }));
 
-  it('deleteListItem method calls dbManagerService\'s deleteListItem method and after a succesfull backend response it emits -1 to the EditService, which causes the form to disappear', () => {
+  it('deleteListItem method calls dbManagerService\'s deleteListItem method and after a succesfull backend response it emits -1 to the EditService, which causes the form to disappear', async(() => {
     hostComponent.listType = 'poems';
     fixture.detectChanges();
     const spy = spyOn(dbManagerService, 'deleteListItem').and.callThrough();
     editService.listItemId$
-      .pipe(first()) // In the test the editService pushes twice, but the second time the editComponent.listItem is undefined, causing an error
       .subscribe(res => {
+        console.log("mijnres: ", res)
         fixture.detectChanges();
         expect(el.querySelector('form')).toBeTruthy();
         editComponent.deleteListItem();
         expect(spy).toHaveBeenCalledWith(hostComponent.listType, stubListItems[1]);
-        fixture.detectChanges();
-        expect(el.querySelector('form')).toBeFalsy();
       });
     editService.pushListItemId(2);
-  });
+  }));
 
-  it('onForeignKeyChange adjusts the formvalues to the foreign key it gets passed', () => {
+  it('emitting -1 to the EditService indeed causes the form to disappear', async(() => {
+    hostComponent.listType = 'poems';
+    fixture.detectChanges();
+    editService.listItemId$
+      .subscribe(listItemId => {
+        fixture.detectChanges();
+        if (listItemId !== -1) {
+          expect(el.querySelector('form')).toBeTruthy();
+        } else {
+          expect(el.querySelector('form')).toBeFalsy();
+        }
+      });
+    editService.pushListItemId(2);
+    editService.pushListItemId(-1);
+  }));
+
+  it('onForeignKeyChange adjusts the formvalues to the foreign key it gets passed', async(() => {
     editComponent.listType = 'poems';
     const form = editComponent.editForm;
     const initialFormValue = { text: 'text poem1', title: 'title poem1', poet_id: '', poet_name: '', bundle_id: '', bundle_title: '', url: '', url_label: '', comment: '' };
@@ -158,5 +170,5 @@ describe('EditComponent', () => {
         expect(form.value).toEqual(newFormValue);
       });
     editService.pushListItemId(1);
-  });
+  }));
 });
