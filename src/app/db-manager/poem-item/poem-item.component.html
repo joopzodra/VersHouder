@@ -2,7 +2,7 @@
   <div *ngIf="poemItem$ | async, let poemItem" class="w3-container w3-section">
 
     <header class="w3-container w3-display-container w3-teal">
-      <h2 class="serif">{{poemItem.title ? poemItem.title : poemItem.text.split('\\n')[0]}}</h2>
+      <h2 class="serif">{{poemItem.title ? poemItem.title : poemItem.text.split('\n')[0]}}</h2>
       <span (click)="hidePoemItem()" class="w3-button w3-display-topright w3-xlarge">&times;</span>
       <div class="w3-container w3-teal">
       <button class="w3-button w3-theme-d2 w3-margin-bottom" (click)="editListItem(poemItem.id)">Wijzigen</button>
