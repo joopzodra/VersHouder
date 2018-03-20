@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, ISubscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -21,7 +21,7 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
  * Which formfields the form contains, is determined by the listType input binding.
  * The EditComponent prefills the form with data it receives from the ListItemStore. This data is based on the id of the poem, poet or bundle which the EditComponent receives from the EditService.
  * If the id === 0, it means a new listItem must be added. When the id === 0 no listItem will be filtered out. In this case the EditComponent offer the user a blank form.
- * If the id === -1, it means the form must be hidden. The id === -1 is triggered by the EditComponent itself, by its onSubmit method.
+ * If the id === -1, it means the form must be hidden. The id === -1 is triggered by the EditComponent itself, by its hideForm method.
  */
 
  @Component({
@@ -34,6 +34,7 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
    editForm: FormGroup;
    listItem: ListItem;
    listItemSubscription: Subscription;
+   locationSubscription: ISubscription;
    headerInfo = {
      'poems': 'Gedicht',
      'poets': 'Dichter',
@@ -72,7 +73,7 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
      const listItems$ = this.listItemsStore.listItems$;
      this.listItemSubscription = combineLatest(id$, listItems$).subscribe(([id, listItems]) => {
        if (id === -1) {
-         this.hideForm()
+         this.listItem = undefined;
          return;
        }
        if (id === 0) {
@@ -85,6 +86,11 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
          this.editForm.patchValue(this.listItem);         
        }
      });
+
+     // Hide the edit form after the browsers back button is clicked
+     this.locationSubscription = this.location.subscribe(() => {
+       this.hideForm();
+     })
    }
 
    buildForm(fb: FormBuilder) {
@@ -138,7 +144,7 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
     const editedItem = Object.assign(this.listItem, formValue);
     this.dbManagerService.createOrUpdateListItem(this.listType, editedItem)
     .subscribe(
-      succes => this.editService.pushListItemId(-1),
+      succes => this.hideForm(),
       error => this.handleError(error)
       );
   }
@@ -150,6 +156,7 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
   hideForm() {
     this.listItem = undefined;
     this.editForm.reset();
+    this.editService.pushListItemId(-1);
     return false;
   }
 
@@ -202,5 +209,6 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
 
   ngOnDestroy() {
     this.listItemSubscription.unsubscribe();
+    this.locationSubscription.unsubscribe();
   }
 }
