@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
     this.authService.username$.subscribe(username => this.username = username);
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {console.log('username:', this.username)
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {
     const cookies = cookie.parse(document.cookie);
     if (!cookies.auth || cookies.auth !== 'yes') {
       let url: string = state.url;

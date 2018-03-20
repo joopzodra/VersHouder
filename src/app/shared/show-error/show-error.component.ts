@@ -2,8 +2,8 @@ import { Component, Input, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 
 /**
- * The ShowErrorComponent is used as child component on multiple places in the LoginComponent and SignupComponent. It checks the form constantly (due to Angular's change detection) on errors in respect to the form contstaints.
- * These constraint are defined in the form definitions in the LoginComponent and SignupComponent.
+ * The ShowErrorComponent is used as child component on multiple places in the LoginComponent, SignupComponent and EditComponent. It checks the form constantly (due to Angular's change detection) on errors in respect to the form contstaints.
+ * These constraint are defined in the form definitions in the LoginComponent, SignupComponent and EditComponent.
  * When errors occur, the ShowErrorComponent displays them in it's own template.
  */
 
@@ -47,9 +47,14 @@ export class ShowErrorComponent {
           case 'pattern':
             if (this.controlPath === 'username') {
               message = `${this.displayName} mag alleen letters of cijfers bevatten.`
+            } else if (this.controlPath === 'born' || this.controlPath === 'died' || this.controlPath === 'year') {
+              message = `${this.displayName} moet uit vier cijfers bestaan.`;
             } else {
               message = `${this.displayName} mag geen spaties bevatten.`
             }
+            break;
+          case 'invalidUrl':
+            message = `${this.displayName} moet een geldige URL bevatten.`;
             break;
         }
         messages.push(message);

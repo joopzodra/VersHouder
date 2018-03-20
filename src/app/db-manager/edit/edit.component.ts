@@ -13,7 +13,7 @@ import { ListItemsStore } from '../services/list-items.store';
 import { DbManagerService } from '../services/db-manager.service';
 import { EditService } from '../services/edit.service';
 import { Poet, Bundle } from '../../models/foreign-key-children';
-import { urlValidator, urlLabelValidator } from '../../app-validators';
+import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
 
 /**
  * The EditComponent offers the user a form to edit a poem, poet or bundle, or to create a new one.

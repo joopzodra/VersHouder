@@ -1,7 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 
 import { AuthModule } from './auth/auth.module';
@@ -19,8 +17,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule,
-    HttpClientModule,
     AuthModule,
     AppRoutingModule,
   ],
