@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 
 import { AuthModule } from './auth/auth.module';
-//import { DbManagerModule } from './db-manager/db-manager.module';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -23,7 +22,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     ReactiveFormsModule,
     HttpClientModule,
     AuthModule,
- /*   DbManagerModule,*/
     AppRoutingModule,
   ],
   providers: [

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-//import { AuthModule } from './auth/auth.module';
 import { DbManagerComponent } from './db-manager/db-manager.component';
 import { AuthGuard } from './auth/services/auth.guard';
 import { PoemsListComponent } from './db-manager/poems-list/poems-list.component';
@@ -12,19 +11,17 @@ import { PoemItemComponent } from './db-manager/poem-item/poem-item.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 /**
- * In the appRoutes, all routes are guarded by the AuthGuard. 
- * The AuthGuard is set on every db-manager childroute separately. It could have been set on the 'db-manager' parent route instead of on all the children. But then the AuthGuard isn't called when we navigate from child to child. 
- * We want the AuthGuard to be called on every navigation, because the AuthGuard refreshes the auth-cookie. Since every child receives fresh data from the backend, the backend refreshed the session cookie. We want the auth-cookie and session-cookie to be refreshed simulaniously, so we don't need to handle cases when one is expired while the other is still valid.
+ * In the appRoutes, only the ** routes is guarded by the AuthGuard.
+ * The DbManagerModule has the authGuard set on its child routes; we don't guard them here.
+ * The DbManagerModule is lazy loaded, saving about 25% of initial loading time.
+ * The AuthModule cannot be lazy loaded, since it's AuthGuard is needed in the AppModule and the DbManagerModule.
+ * The auth route is defined in the AuthRoutingModule. 
  */
-
-/*export function loadAuthModule() {
-  return AuthModule;
-}*/
 
 const appRoutes: Routes = [
   { path: 'db-manager', loadChildren: 'app/db-manager/db-manager.module#DbManagerModule' },
   { path: '', redirectTo: 'db-manager', pathMatch: 'full' },
-  { path: '**', /*canActivate: [AuthGuard],*/ component: PageNotFoundComponent }
+  { path: '**', canActivate: [AuthGuard], component: PageNotFoundComponent }
 ];
 
 @NgModule({
