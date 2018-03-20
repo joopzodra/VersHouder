@@ -17,12 +17,23 @@ export class PageButtonsService {
   private pageAction = new Subject<'previous' | 'next'>();
   pageAction$ = this.pageAction.asObservable();
 
+  private cachedData: PageButtonsData;
+
   pushPageButtonsData(pageButtonsData: PageButtonsData) {
     this.show.next(pageButtonsData);
+    this.cachedData = pageButtonsData;
   }
 
   pushPageAction(pageAction: 'previous' | 'next') {
     this.pageAction.next(pageAction);
+  }
+
+  pushPageButtonsHide(hide: boolean) {
+    this.show.next({
+      showContainer: !hide,
+      showPreviousButton: this.cachedData.showPreviousButton,
+      showNextButton: this.cachedData.showNextButton
+    })
   }
 
 }

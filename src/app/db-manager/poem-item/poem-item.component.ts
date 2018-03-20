@@ -10,6 +10,7 @@ import { PoemsListItem } from '../../models/list-items';
 import { ListItemsStore } from '../services/list-items.store';
 import { EditService } from '../services/edit.service';
 import { HideComponentsService } from '../services/hide-components.service';
+import { PageButtonsService } from '../services/page-buttons.service';
 
 /**
  * The PoemItemComponent shows the full text of a poem and some more info about the poem.
@@ -37,7 +38,8 @@ export class PoemItemComponent implements OnInit, OnDestroy {
     private location: Location,
     private editService: EditService,
     private router: Router,
-    private hideComponentsService: HideComponentsService
+    private hideComponentsService: HideComponentsService,
+    private pageButtonsService: PageButtonsService
   ) {
     const paramsId = this.activatedRoute.snapshot.params.id;
     this.poemsListItemId = +paramsId;
@@ -47,6 +49,7 @@ export class PoemItemComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const title = this.activatedRoute.snapshot.data['title'];
     this.titleService.setTitle(title);
+    this.pageButtonsService.pushPageButtonsHide(true);
     this.poemItem$ = this.listItemsStore.listItems$
       .pipe(
         map((poemsListItems: PoemsListItem[]) => poemsListItems.filter(poemItem => poemItem.id === this.poemsListItemId)[0]),
@@ -70,5 +73,6 @@ export class PoemItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.hideComponentsService.pushHide(false);
+    this.pageButtonsService.pushPageButtonsHide(false);
   }
 }
