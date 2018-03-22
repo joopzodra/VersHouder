@@ -10,7 +10,7 @@ import { User } from '../../models/user';
 /**
  * The LoginFormComponent creates a login form.
  * On submit it calls the AuthService login method with the formvalue as argument.
- * In the template it uses the ShowErrorComponent to show error messages when the formvalue constraints are not met.
+ * In the template it uses the ShowErrorComponent (in the SharedModule) to show error messages when the formvalue constraints are not met.
  */
 
 @Component({
