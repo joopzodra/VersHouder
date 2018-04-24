@@ -4,5 +4,13 @@
 		{
 			"path": "."
 		}
-	]
+	],
+  "SublimeLinter": {
+    "linters":
+    {
+      "htmltidy": {
+        "disable": true
+      }
+    }
+  }
 }
