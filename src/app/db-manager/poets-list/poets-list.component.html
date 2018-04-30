@@ -7,17 +7,20 @@
       <col class="name" />
       <col class="born" />
       <col class="died" />
+      <col class="img" />
     </colgroup>
     <tr class="w3-teal">
       <th>Dichter</th>
       <th>Geboren</th>
       <th>Gestorven</th>
+      <th></th>
     </tr>
-    <tr *ngIf="(listItems$ | async).length===0"><td colspan="3">Geen zoekresultaten</td></tr>
+    <tr *ngIf="(listItems$ | async).length===0"><td colspan="4">Geen zoekresultaten</td></tr>
     <tr class="hoverable list-item-row" *ngFor="let row of listItems$ | async" (click)="editListItem(row.id)">
       <td>{{row.name ? row.name : '–'}}</td>
       <td>{{row.born ? row.born : '–'}}</td>
       <td>{{row.died ? row.died : '–'}}</td>
+      <td class="img-cell"><img *ngIf="row.img_url" [src]="imgBaseUrl + row.img_url"></td>
     </tr>
   </table>
 </div>

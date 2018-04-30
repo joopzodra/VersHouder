@@ -24,6 +24,21 @@ label {
 #remote-error {
   background-color: #fff;
 }
+.img-not-required {
+  color: #888;
+  font-family: Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.img-container {
+  margin-top: 16px;
+  display: flex;
+  align-items: flex-start;
+
+  img {
+    margin-right: 16px;
+  }
+}
 @media (max-width:600px) {
   .button-bar button:nth-child(2) {
     margin-left: 12px;

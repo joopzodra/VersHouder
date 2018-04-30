@@ -11,7 +11,7 @@
         </header>
 
         <div [ngSwitch]="listType" class="w3-container w3-border-left w3-border-right w3-border-bottom">
-          <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)" class="w3-container w3-padding-16">
+          <form enctype="multipart/form-data" [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)" class="w3-container w3-padding-16">
 
             <div *ngSwitchCase="'poems'" class="">
               <p>
@@ -65,6 +65,16 @@
                 <input class="w3-input w3-border" type="text" formControlName="died" placeholder="niet verplicht">
                 <jr-show-error text="Sterfjaar" path="died"></jr-show-error>
               </p>          
+              <div>
+                <label>Afbeelding</label>
+                <div class="img-not-required">niet verplicht</div>
+                <input class="w3-input w3-border" type="file" accept="image/png, image/jpeg" formControlName="img" (change)="onFileUpload($event.target.files)">
+                <span>{{poetImgUploadError}}</span>
+              </div>
+              <div *ngIf="poetImgSrc" class="img-container">
+                <img [src]="poetImgSrc">
+                <button class="w3-button w3-small w3-teal" (click)="removeImage($event)">verwijder afbeelding</button>
+              </div>
             </div>
 
             <div *ngSwitchCase="'bundles'" class="">

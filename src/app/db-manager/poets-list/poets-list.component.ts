@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
+import { BACKEND_URL } from '../../app-tokens';
 import { DbManagerService } from '../services/db-manager.service';
 import { ListItemsStore } from '../services/list-items.store';
 import { PoetsListItem } from '../../models/list-items';
@@ -26,14 +27,19 @@ export class PoetsListComponent implements OnInit {
   searching$: Observable<boolean>;
   remoteError$: Observable<number>
   listType = 'poets';
+  imgBaseUrl: string;
 
   constructor(
     private titleService: Title,
     private activatedRoute: ActivatedRoute,
     private dbManagerService: DbManagerService,
     private listItemsStore: ListItemsStore,
-    private editService: EditService
-  ) { }
+    private editService: EditService,
+    @Inject(BACKEND_URL) backendUrl: string
+  ) {
+    const host = backendUrl.substring(0, backendUrl.indexOf('/gedichtenDb'));
+    this.imgBaseUrl = host + '/uploads/gedichtenDb/';
+  }
 
   ngOnInit() {
     const title = this.activatedRoute.snapshot.data['title'];
@@ -48,7 +54,7 @@ export class PoetsListComponent implements OnInit {
     this.editService.pushListItemId(idNum);
   }
 
-  addListItem(){
+  addListItem() {
     this.editService.pushListItemId(0);
   }
 }

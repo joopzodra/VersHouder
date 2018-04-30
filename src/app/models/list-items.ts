@@ -16,9 +16,11 @@ export interface PoemsListItem {
 
 export interface PoetsListItem {
   name: string,
+  item_id?: number,
   id?: number,
   born?: number,
   died?: number,
+  img_url?: string
 }
 
 export interface BundlesListItem {

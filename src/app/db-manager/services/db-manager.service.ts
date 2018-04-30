@@ -4,9 +4,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { tap, catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import * as FormData from 'form-data'
 
 import { BACKEND_URL, URL } from '../../app-tokens';
-import { ListItem } from '../../models/list-items';
+import { ListItem, PoetsListItem } from '../../models/list-items';
 import { ListItemsStore, LOAD, ADD, EDIT, REMOVE } from './list-items.store';
 import { Poet, Bundle } from '../../models/foreign-key-children';
 
@@ -76,34 +77,50 @@ export class DbManagerService {
     return this.http.get<ListItem>(this.backendUrl + '/manager/find-by-id', options);
   }
 
-  createOrUpdateListItem(listType: string, listItem: ListItem): Observable<boolean | {}> {
+  createOrUpdateListItem(listType: string, formData: FormData, listItem: ListItem): Observable<boolean | {}> {console.log(listItem)
     const options = {
       headers: this.headers,
       params: new HttpParams()
         .set('table', listType)
     };
     if (!listItem.id) {
-      return this.http.post<ListItem>(this.backendUrl + '/manager/create', listItem, options)
+      return this.http.post<ListItem>(this.backendUrl + '/manager/create', formData, options)
         .pipe(
           mergeMap(res => this.getListItemById(listType, res.id.toString())),
           tap(res => this.listItemsStore.dispatch({ type: ADD, data: [res] })),
           map(() => true)
         )
     } else {
-      return this.http.put<ListItem>(this.backendUrl + '/manager/update', listItem, options)
+      formData.append('id', listItem.id);
+      if((<PoetsListItem>listItem).item_id) {
+        formData.append('item_id', (<PoetsListItem>listItem).item_id)
+      }
+      return this.http.put<{affectedCount: Number[], imgUrl?: string}>(this.backendUrl + '/manager/update', formData, options)
         .pipe(
-          tap(res => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
+          tap(res => {
+            if (res.imgUrl || res.imgUrl === '') {
+              (<PoetsListItem>listItem).img_url = res.imgUrl;
+              console.log(listItem)
+            }
+          }),
+          tap(() => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
           map(() => true)
         );
     }
   }
 
   deleteListItem(listType: string, listItem: ListItem): Observable<boolean> {
+    let imgUrl;  
+    if (listType === 'poets') {
+         const poetsListItem = <PoetsListItem>listItem 
+          imgUrl = poetsListItem.img_url ? poetsListItem.img_url : '';
+    }
     const options = {
       headers: this.headers,
       params: new HttpParams()
         .set('table', listType)
         .set('id', listItem.id.toString())
+        .set('imgUrl', imgUrl)
     }
     return this.http.delete(this.backendUrl + '/manager/delete', options)
       .pipe(
