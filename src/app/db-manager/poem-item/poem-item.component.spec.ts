@@ -11,6 +11,8 @@ import { StubListItemsStore } from '../../testing/stub-list-items-store'
 import { EditService } from '../services/edit.service';
 import { PoemsListItem } from '../../models/list-items';
 import { HideComponentsService } from '../services/hide-components.service';
+import { PageButtonsService } from '../services/page-buttons.service';
+import { StubPageButtonsService } from '../../testing/stub-page-button-service'
 
 describe('PoemItemComponent', () => {
   let component: PoemItemComponent;
@@ -24,17 +26,18 @@ describe('PoemItemComponent', () => {
   @Component({
     template: ''
   })
-  class StubComponent {}
+  class StubComponent { }
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{path:'db-manager/poems', component:StubComponent}])],
+      imports: [RouterTestingModule.withRoutes([{ path: 'db-manager/poems', component: StubComponent }])],
       declarations: [PoemItemComponent, StubComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: 'Test title' }, params: { listType: 'poems', id: 1 } } } },
         { provide: ListItemsStore, useClass: StubListItemsStore },
         EditService,
-        HideComponentsService
+        HideComponentsService,
+        { provide: PageButtonsService, useClass: StubPageButtonsService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -54,7 +57,7 @@ describe('PoemItemComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('from the poems the ListItemsStore provides, it displays the poem with the id it gets in the route params', (async () => {    
+  it('from the poems the ListItemsStore provides, it displays the poem with the id it gets in the route params', (async () => {
     (<any>listItemsStore).listItems$.next(stubListItems);
     component.poemItem$.subscribe(poemItem => {
       fixture.detectChanges();
