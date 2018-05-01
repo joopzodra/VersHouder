@@ -28,9 +28,10 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
  * An image can be added to a Poet-item. This has some additional concerns: *
  * - In the Poet model there is a 'img_url' property. The value is the url of the image on the backend, the value is received from the backend. In the formbuilder is a field  called 'img'. The value is the filename of the uploaded img and the user sees it in the form.  
  * - Because this EditComponent lives on as long as the user doesn't navigate between the three lists, the poetImgFile and poetImgSrc also live on. Therefore they're explicitely set to undefined after submitting.
- * - The component property 'poetImgSrc' is used to display the image in the form.
+ * - The component property 'poetImgSrc' is used to display the image in the form. It can be set to the src of a just uploaded image or to the src of an image on the server.
  * - The component property 'poetImgFile' is used to add an uploaded image to the FormData object.
- *
+ * - The editForm value 'img' is the text shown in the file upload form field. If the file sizes or format is not correct, the value is reset to '' so the form field shows the 'no file choosen' text.
+ * - The editForm value 'img_url' is for setting the initial value of poetImgSrc. This component doesn't change the value of img_url; it's send with the form data because the backend needs it as reference in case the image must be deleted. *
  */
 
 @Component({
@@ -102,6 +103,7 @@ export class EditComponent implements OnInit, OnDestroy {
       // After deleting the listItems.filter(...) results in an undefined this.listItem, on which editForm.patchValue throws, so we test if we have a listItem.
       if (this.listItem) {
         this.editForm.patchValue(this.listItem);
+        this.poetImgUploadError = '';
         if (this.listType === 'poets' && (<PoetsListItem>this.listItem).img_url) {
           this.poetImgSrc = this.imgBaseUrl + (<PoetsListItem>this.listItem).img_url;
         }
@@ -168,10 +170,14 @@ export class EditComponent implements OnInit, OnDestroy {
     for (const key in formValue) {
       formData.append(key, formValue[key] || ''); // If we don't pass '', then FormData passes null, which from the backend will return as a string 'null'
     }
-    if (this.poetImgFile) {
-      formData.append('img', this.poetImgFile);
+    formData.append('id', this.listItem.id);
+    if (this.listType === 'poets') {
+      formData.append('delete_poet_img', this.deletePoetImg);
+      formData.append('item_id', (<PoetsListItem>this.listItem).item_id)
+      if (this.poetImgFile) {
+        formData.append('img', this.poetImgFile);
+      }
     }
-    formData.append('delete_poet_img', this.deletePoetImg);
     const editedItem = Object.assign(this.listItem, formValue);
     this.dbManagerService.createOrUpdateListItem(this.listType, formData, editedItem)
       .subscribe(
@@ -193,6 +199,7 @@ export class EditComponent implements OnInit, OnDestroy {
   hideForm() {
     this.listItem = undefined;
     this.editForm.reset();
+    this.poetImgSrc = '';
     this.editService.pushListItemId(-1);
     return false;
   }
@@ -255,7 +262,7 @@ export class EditComponent implements OnInit, OnDestroy {
       return;
     }
     if (fileSizeErr) {
-      this.poetImgUploadError = file.name + ' is een te groot afbeeldingsbestand. Maximum is 20kB.'
+      this.poetImgUploadError = file.name + ' is een te groot afbeeldingsbestand. Maximum is 20 kB.'
       this.editForm.patchValue({ 'img': '' });
       return;
     }
@@ -281,8 +288,9 @@ export class EditComponent implements OnInit, OnDestroy {
         return new Promise((resolve, reject) => {
           img.onload = () => {
             if (img.width !== 150 || img.height !== 150) {
-              this.poetImgUploadError = `${file.name} is ${img.width}px bij ${img.height}px. De afbeelding moet 120px bij 120px zijn.`
+              this.poetImgUploadError = `${file.name} is ${img.width}px bij ${img.height}px. De afbeelding moet 150px bij 150px zijn.`
               this.editForm.patchValue({ 'img': '' });
+              resolve();
             }
             resolve(img);
           };
@@ -291,11 +299,15 @@ export class EditComponent implements OnInit, OnDestroy {
         })
       })
       .then((img: HTMLImageElement) => {
-        this.poetImgSrc = img.src;
-        return file;
+        if (img) {
+          this.poetImgSrc = img.src;
+          return file;
+        }
+        return false;
       })
       .catch(() => {
-        this.poetImgUploadError = `Er is een probleem met ${file.name}. Kies opnieuw een afbeeldingsbestand.`
+        this.poetImgUploadError = `Er is een probleem met ${file.name}. Kies opnieuw een afbeeldingsbestand.`;
+        this.poetImgFile = undefined;
         this.editForm.patchValue({ 'img': '' });
         return false;
       });
@@ -305,10 +317,11 @@ export class EditComponent implements OnInit, OnDestroy {
     if (event) {
       event.preventDefault();
     }
-    this.editForm.patchValue({'img': '' });
+    this.editForm.patchValue({ 'img': '' });
     this.poetImgSrc = '';
     this.poetImgFile = undefined;
     this.deletePoetImg = 'true';
+    this.poetImgUploadError = '';
   }
 
   ngOnDestroy() {

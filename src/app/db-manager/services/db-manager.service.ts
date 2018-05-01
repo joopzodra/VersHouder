@@ -14,8 +14,8 @@ import { Poet, Bundle } from '../../models/foreign-key-children';
 /**
  * The DbManagerService sents requests to and receives responses from the backend, concerning the database API requests.
  * The service receives queries from the SearchComponent.
- * It pushes the responses from the backend as listItems to subscribers.
- * Subscribers are the PoemsListComponent, ....
+ * It pushes the responses from the backend to the ListItemsStore's dispatch method.
+ * The queryChildren and findChildById methods receive queries from the ForeignKeySearchComponent and pushes the results directly to these components.
  */
 
 @Injectable()
@@ -34,6 +34,16 @@ export class DbManagerService {
     private listItemsStore: ListItemsStore
   ) {
     this.backendUrl = backendUrl;
+  }
+
+  private getListItemById(listType: string, itemId: string): Observable<ListItem> {
+    const options = {
+      headers: this.headers,
+      params: new HttpParams()
+        .set('table', listType)
+        .set('itemId', itemId)
+    };
+    return this.http.get<ListItem>(this.backendUrl + '/manager/find-by-id', options);
   }
 
   // searchingStart is called in the SearchComponent. From there it can call this method before the debounceTime delay, so the user will see the spinner immediately (not waiting untill the debounceTime delay has finished).
@@ -67,17 +77,7 @@ export class DbManagerService {
       );
   }
 
-  getListItemById(listType: string, itemId: string): Observable<ListItem> {
-    const options = {
-      headers: this.headers,
-      params: new HttpParams()
-        .set('table', listType)
-        .set('itemId', itemId)
-    };
-    return this.http.get<ListItem>(this.backendUrl + '/manager/find-by-id', options);
-  }
-
-  createOrUpdateListItem(listType: string, formData: FormData, listItem: ListItem): Observable<boolean | {}> {console.log(listItem)
+  createOrUpdateListItem(listType: string, formData: FormData, listItem: ListItem): Observable<boolean | {}> {
     const options = {
       headers: this.headers,
       params: new HttpParams()
@@ -91,16 +91,11 @@ export class DbManagerService {
           map(() => true)
         )
     } else {
-      formData.append('id', listItem.id);
-      if((<PoetsListItem>listItem).item_id) {
-        formData.append('item_id', (<PoetsListItem>listItem).item_id)
-      }
       return this.http.put<{affectedCount: Number[], imgUrl?: string}>(this.backendUrl + '/manager/update', formData, options)
         .pipe(
           tap(res => {
             if (res.imgUrl || res.imgUrl === '') {
               (<PoetsListItem>listItem).img_url = res.imgUrl;
-              console.log(listItem)
             }
           }),
           tap(() => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),

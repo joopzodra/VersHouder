@@ -67,9 +67,11 @@
               </p>          
               <div>
                 <label>Afbeelding</label>
-                <div class="img-not-required">niet verplicht</div>
-                <input class="w3-input w3-border" type="file" accept="image/png, image/jpeg" formControlName="img" (change)="onFileUpload($event.target.files)">
-                <span>{{poetImgUploadError}}</span>
+                <div class="img-not-required">niet verplicht, vereisten: exact 150x150px en niet groter dan 20 kB</div>
+                <div class="w3-border">
+                  <input class="w3-input w3-border-0" type="file" accept="image/png, image/jpeg" formControlName="img" (change)="onFileUpload($event.target.files)">
+                  <span class="w3-text-red">{{poetImgUploadError}}</span>
+                </div>
               </div>
               <div *ngIf="poetImgSrc" class="img-container">
                 <img [src]="poetImgSrc">
