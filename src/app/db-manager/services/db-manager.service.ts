@@ -91,24 +91,31 @@ export class DbManagerService {
           map(() => true)
         )
     } else {
-      return this.http.put<{affectedCount: Number[], imgUrl?: string}>(this.backendUrl + '/manager/update', formData, options)
+      return this.http.put<{ affectedCount: Number[], imgUrl?: string }>(this.backendUrl + '/manager/update', formData, options)
         .pipe(
           tap(res => {
             if (res.imgUrl || res.imgUrl === '') {
               (<PoetsListItem>listItem).img_url = res.imgUrl;
             }
           }),
-          tap(() => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
-          map(() => true)
+          // Next line outcommented as it results in Firefox (not in other browsers) to an error: DOMException: The operation is insecure.
+          // Which causes the error is not clear. It only happens if a poet-image is changed; but even then the server response is as expected.
+          // By the way: the poets list also update without de listItemStore updated by EDIT.
+          // tap(() => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
+          map(() => true),
+          catchError(error => {
+            console.log(error);
+            return of(false);
+          })
         );
     }
   }
 
   deleteListItem(listType: string, listItem: ListItem): Observable<boolean> {
-    let imgUrl;  
+    let imgUrl;
     if (listType === 'poets') {
-         const poetsListItem = <PoetsListItem>listItem 
-          imgUrl = poetsListItem.img_url ? poetsListItem.img_url : '';
+      const poetsListItem = <PoetsListItem>listItem
+      imgUrl = poetsListItem.img_url ? poetsListItem.img_url : '';
     }
     const options = {
       headers: this.headers,
