@@ -98,10 +98,7 @@ export class DbManagerService {
               (<PoetsListItem>listItem).img_url = res.imgUrl;
             }
           }),
-          // Next line outcommented as it results in Firefox (not in other browsers) to an error: DOMException: The operation is insecure.
-          // Which causes the error is not clear. It only happens if a poet-image is changed; but even then the server response is as expected.
-          // By the way: the poets list also update without de listItemStore updated by EDIT.
-          // tap(() => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
+          tap(() => this.listItemsStore.dispatch({ type: EDIT, data: [listItem] })),
           map(() => true),
           catchError(error => {
             console.log(error);

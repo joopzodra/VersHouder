@@ -31,7 +31,10 @@ import { urlValidator, urlLabelValidator } from '../../shared/app-validators';
  * - The component property 'poetImgSrc' is used to display the image in the form. It can be set to the src of a just uploaded image or to the src of an image on the server.
  * - The component property 'poetImgFile' is used to add an uploaded image to the FormData object.
  * - The editForm value 'img' is the text shown in the file upload form field. If the file sizes or format is not correct, the value is reset to '' so the form field shows the 'no file choosen' text.
- * - The editForm value 'img_url' is for setting the initial value of poetImgSrc. This component doesn't change the value of img_url; it's send with the form data because the backend needs it as reference in case the image must be deleted. *
+ * - The editForm value 'img_url' is for setting the initial value of poetImgSrc. This component doesn't change the value of img_url; it's send with the form data because the backend needs it as reference in case the image must be deleted.
+ *
+ * In the submit method there's an if-statement for setting the img-property of editedItem to ''.
+ * Without it, after uploading an image with the form, the form's img property has a value like: "C:\fakepath\slauerhoff-website.jpg". We get this property back here as listItem's property from the listStore after submitting. If then we patch this to the form in the OnInit subscription, we get in Chrome: DOMException: Failed to set the 'value' property on 'HTMLInputElement': This input element accepts a filename, which may only be programmatically set to the empty string. In Firefox the message is less clear and difficult to debug: DOMExeption: the operation is insecure.
  */
 
 @Component({
@@ -179,6 +182,10 @@ export class EditComponent implements OnInit, OnDestroy {
       }
     }
     const editedItem = Object.assign(this.listItem, formValue);
+    // See the doc text above for the reason for the following if-statement.
+    if (editedItem.img) {
+      editedItem.img = '';
+    }
     this.dbManagerService.createOrUpdateListItem(this.listType, formData, editedItem)
       .subscribe(
         succes => {
