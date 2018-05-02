@@ -21,7 +21,7 @@
     <footer class="w3-container w3-teal">
       <p>Door: <span class="italic">{{poemItem.poet_name ? poemItem.poet_name : '–'}}</span></p>
       <p *ngIf="poemItem.bundle_title">Uit: <span class="italic">{{poemItem.bundle_title}}</span></p>
-      <p *ngIf="poemItem.url">Bron: <span class="italic"><a [href]="poemItem.url">{{poemItem.url_label || poemItem.url}}</a></span></p>
+      <p *ngIf="poemItem.url">Bron: <span class="italic"><a [href]="poemItem.url" target="_blank">{{poemItem.url_label || poemItem.url}}</a></span></p>
     </footer>
   </div>
 </div>
