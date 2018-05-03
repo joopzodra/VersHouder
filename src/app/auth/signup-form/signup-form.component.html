@@ -14,11 +14,11 @@
   </div>
   <form (ngSubmit)="onSubmit(signupForm.value)" [formGroup]="signupForm">
     <div>
-      <input class="w3-input w3-border w3-section" type="text" placeholder="gebruikersnaam" formControlName="username">
+      <input class="w3-input w3-border w3-section" type="text" placeholder="gebruikersnaam (minimaal 4 tekens)" formControlName="username">
       <jr-show-error text="Gebruikersnaam" path="username"></jr-show-error>
     </div>
     <div>
-      <input class="w3-input w3-border w3-section" type="text" placeholder="wachtwoord" formControlName="password">
+      <input class="w3-input w3-border w3-section" type="text" placeholder="wachtwoord (minimaal 4 tekens)" formControlName="password">
       <jr-show-error text="Wachtwoord" path="password"></jr-show-error>
     </div>
     <button class="w3-button w3-blue w3-block" type="submit">Aanmelden</button>
